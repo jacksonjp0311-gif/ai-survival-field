@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from asf.core.errors import PolicyError
+from asf.core.hashing import stable_hash
 
 
 @dataclass(frozen=True)
@@ -13,6 +14,8 @@ class Policy:
     name: str
     actions: dict[str, dict[str, Any]]
     human_authorization_actions: list[str]
+    policy_hash: str
+    raw: dict[str, Any]
 
     def requirement_for(self, action: str) -> str:
         rule = self.actions.get(action)
@@ -37,5 +40,6 @@ def load_policy(path: str | Path) -> Policy:
         name=str(data.get("name", "unnamed-policy")),
         actions=dict(data["actions"]),
         human_authorization_actions=list(data.get("human_authorization_actions", [])),
+        policy_hash=stable_hash(data),
+        raw=data,
     )
-

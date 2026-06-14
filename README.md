@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.1.1 evidence seal: experimental production line.
+ASF-R v0.2 policy-as-code hardening: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -141,6 +141,12 @@ Show governance debt:
 python -m asf.cli debt
 ```
 
+Compare policies:
+
+```powershell
+python -m asf.cli policy diff policies/default.yaml policies/strict.json
+```
+
 ## Runtime Geometry
 
 ```text
@@ -182,6 +188,8 @@ ai-survival-field/
   docs/
     architecture.md
     adapter_safety.md
+    authorization_receipts.md
+    capability_tokens.md
     decision_replay.md
     governance_debt.md
     invariant_registry.md
@@ -191,6 +199,7 @@ ai-survival-field/
     production_maturity.md
     rehydration_findings.md
     runtime_alignment_auditor.md
+    self_healing_horizon.md
     releases/
   tests/
 ```
@@ -216,6 +225,35 @@ Core seal rule:
 ```text
 Before expansion, seal the loop.
 ```
+
+## v0.2 Policy-As-Code Hardening
+
+v0.2 proves that explicit policy controls continuation.
+
+It adds:
+
+- policy diff engine,
+- policy regression tests,
+- capability tokens,
+- authorization receipts,
+- policy hash binding in decisions,
+- policy hash binding in ledger records,
+- active policy panel in geometric UI,
+- v0.2 release seal.
+
+Required laws:
+
+```text
+A policy change is a governance mutation.
+Dangerous actions require scoped capability tokens.
+Durable authority requires authorization receipts.
+Same artifact plus different policy may produce different allowed continuation.
+Unknown is still not pass.
+No adapter may self-authorize.
+```
+
+Adapters remain non-mutating by default. Live enforcement is reserved for
+`ASF-R v0.3 Adapter Enforcement Dry Run`.
 
 ## Non-Claim Lock
 

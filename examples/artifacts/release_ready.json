@@ -1,0 +1,32 @@
+{
+  "schema": "ASF-ARTIFACT-v0.1",
+  "artifact_id": "release-ready",
+  "mode": "enforced_review",
+  "intended_action": "release",
+  "raw_field": "Release candidate with bounded reproducible local evidence.",
+  "constraints": [
+    {
+      "id": "C1",
+      "statement": "Release candidate has local tests and bounded evidence.",
+      "permission_level": "reproducible",
+      "load_bearing": true
+    },
+    {
+      "id": "C2",
+      "statement": "Release claim remains non-production and non-security.",
+      "permission_level": "reproducible",
+      "load_bearing": true
+    }
+  ],
+  "survivor_field": "The artifact may support a bounded release under a matching policy and scoped authority.",
+  "residual_layers": ["No external security review exists."],
+  "missing_gates": [],
+  "bounded_claim": "Bounded reproducible release candidate.",
+  "graph": {
+    "nodes": ["C1", "C2"],
+    "edges": [{"from": "C1", "to": "C2", "type": "bounded_by"}]
+  },
+  "conflicts": [],
+  "audit_consequences": ["claim_boundary_moved", "dependency_exposed", "next_admissible_action_changed"],
+  "human_authorization": {"granted": true}
+}

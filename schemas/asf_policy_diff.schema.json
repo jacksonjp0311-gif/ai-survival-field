@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Policy Diff v0.1",
+  "type": "object",
+  "required": ["schema", "from_policy", "to_policy", "added_actions", "removed_actions", "lowered_ceilings", "raised_ceilings", "non_claim_lock"]
+}

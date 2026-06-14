@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Capability Token v0.1",
+  "type": "object",
+  "required": ["schema", "token_id", "granted_by", "granted_to", "allowed_action", "artifact_hash", "policy_hash", "adapter", "expires_at", "scope", "revoked"]
+}

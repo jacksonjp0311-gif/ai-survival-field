@@ -1,0 +1,11 @@
+{
+  "name": "lenient-release-policy",
+  "human_authorization_actions": ["release", "update_memory", "autonomous_action"],
+  "actions": {
+    "draft": {"min_permission_ceiling": "exploratory", "requires": []},
+    "publish": {"min_permission_ceiling": "residual_stratified", "requires": ["bounded_language"]},
+    "release": {"min_permission_ceiling": "residual_stratified", "requires": []},
+    "update_memory": {"min_permission_ceiling": "reproducible", "requires": ["source_trace"]},
+    "autonomous_action": {"min_permission_ceiling": "domain_validated", "requires": ["permission_token"]}
+  }
+}

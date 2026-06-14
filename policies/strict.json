@@ -1,0 +1,11 @@
+{
+  "name": "strict-asf-policy",
+  "human_authorization_actions": ["publish", "commit", "release", "update_memory", "mark_canonical", "autonomous_action"],
+  "actions": {
+    "draft": {"min_permission_ceiling": "constraint_audited", "requires": ["evidence_reference"]},
+    "publish": {"min_permission_ceiling": "reproducible", "requires": ["evidence_reference", "bounded_language", "human_approval"]},
+    "release": {"min_permission_ceiling": "domain_validated", "requires": ["tests_passed", "ci_green", "security_review", "human_approval"]},
+    "update_memory": {"min_permission_ceiling": "domain_validated", "requires": ["source_trace", "evidence_hash", "rollback_plan", "human_approval"]},
+    "autonomous_action": {"min_permission_ceiling": "formal", "requires": ["sandbox_pass", "bounded_scope", "permission_token", "external_review"]}
+  }
+}

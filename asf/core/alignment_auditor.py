@@ -23,6 +23,8 @@ def audit_runtime_result(result: dict[str, Any], *, readme_text: str = "") -> di
         failures.append("WOUND_DECISION_DRIFT")
     if ledger.get("decision_hash") != decision.get("decision_hash"):
         failures.append("LEDGER_HASH_DRIFT")
+    if ledger.get("policy_hash") != decision.get("policy_hash"):
+        failures.append("POLICY_DECISION_DRIFT")
     if ledger.get("rcc_route_hash") != route.get("route_hash"):
         failures.append("RCC_ROUTE_DRIFT")
     if ledger.get("rhp_state_hash") != rehydration.get("proof_state_hash"):
@@ -43,4 +45,3 @@ def audit_runtime_result(result: dict[str, Any], *, readme_text: str = "") -> di
         "checked_surfaces": ["decision", "wound", "ledger", "route", "rehydration", "ui", "readme"],
         "non_claim_lock": "Alignment audit checks surface coherence. It does not prove truth.",
     }
-

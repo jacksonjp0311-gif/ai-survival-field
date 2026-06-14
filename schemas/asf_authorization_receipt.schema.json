@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Authorization Receipt v0.1",
+  "type": "object",
+  "required": ["schema", "receipt_id", "operator", "action", "artifact_hash", "policy_hash", "decision_hash", "timestamp", "scope", "expiration", "non_claim_lock"]
+}

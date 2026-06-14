@@ -6,6 +6,8 @@ from pathlib import Path
 
 from asf.core.governance_debt import registry as governance_debt_registry
 from asf.core.invariants import registry as invariant_registry
+from asf.core.policy import load_policy
+from asf.core.policy_diff import diff_policies
 from asf.ledger.ledger import verify_record
 from asf.ledger.replay import replay_decision
 from asf.runtime import run_loop
@@ -70,6 +72,13 @@ def command_replay(args: argparse.Namespace) -> int:
     return 0 if report.replay_pass else 2
 
 
+def command_policy_diff(args: argparse.Namespace) -> int:
+    old = load_policy(args.old_policy)
+    new = load_policy(args.new_policy)
+    print_json(diff_policies(old, new).as_dict())
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="AI Survival Field Runtime")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -121,6 +130,13 @@ def build_parser() -> argparse.ArgumentParser:
     replay.add_argument("--root", default=".")
     replay.add_argument("--authorized", action="store_true", default=True)
     replay.set_defaults(func=command_replay)
+
+    policy = sub.add_parser("policy")
+    policy_sub = policy.add_subparsers(dest="policy_command", required=True)
+    diff = policy_sub.add_parser("diff")
+    diff.add_argument("old_policy")
+    diff.add_argument("new_policy")
+    diff.set_defaults(func=command_policy_diff)
     return parser
 
 

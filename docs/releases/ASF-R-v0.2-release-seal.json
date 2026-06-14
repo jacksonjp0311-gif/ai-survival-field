@@ -1,0 +1,38 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.1",
+  "version": "v0.2",
+  "test_result": "Ran 42 tests OK",
+  "artifact_examples": [
+    "examples/artifacts/draft_allowed.json",
+    "examples/artifacts/release_blocked_missing_tests.json",
+    "examples/artifacts/release_ready.json"
+  ],
+  "policy_files": [
+    "policies/default.yaml",
+    "policies/strict.json",
+    "policies/lenient_release.json"
+  ],
+  "new_controls": [
+    "policy_diff",
+    "policy_regression_tests",
+    "capability_tokens",
+    "authorization_receipts",
+    "policy_hash_bound_decisions",
+    "policy_hash_bound_ledger",
+    "active_policy_ui_panel"
+  ],
+  "open_wounds": [
+    "live_adapters_not_enabled",
+    "capability_tokens_not_signed",
+    "authorization_receipts_not_persisted"
+  ],
+  "governance_debt": [
+    "ASF-DEBT-001",
+    "ASF-DEBT-002",
+    "ASF-DEBT-003",
+    "ASF-DEBT-004"
+  ],
+  "non_claim_lock": "ASF-R v0.2 proves policy controls continuation in an experimental runtime. It is not live production enforcement, production security, formal verification, autonomous safety, or a truth engine.",
+  "next_version": "v0.3 Adapter Enforcement Dry Run",
+  "release_claim_ceiling": "residual_stratified"
+}

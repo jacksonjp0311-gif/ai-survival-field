@@ -11,6 +11,8 @@ class Decision:
     schema: str = "ASF-DECISION-v0.1"
     artifact_id: str = ""
     action: str = ""
+    policy_name: str = ""
+    policy_hash: str = ""
     status: str = "block"
     permission_ceiling: str = "blocked"
     limiting_evidence_node: str | None = None
@@ -31,4 +33,3 @@ class Decision:
         data["decision_hash"] = ""
         data["decision_hash"] = stable_hash(data)
         return data
-

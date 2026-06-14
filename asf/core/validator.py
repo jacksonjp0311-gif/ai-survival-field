@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from asf.core.artifact import ASFArtifact
+from asf.core.capability_token import CapabilityToken, token_allows
 from asf.core.decision import Decision
+from asf.core.hashing import stable_hash
 from asf.core.permissions import allowed, min_level
 from asf.core.policy import Policy
 from asf.rcc.route import RCCRoute
@@ -29,52 +31,65 @@ def validate(
     policy: Policy,
     rehydration: RehydrationReport,
     route: RCCRoute,
+    capability_token: CapabilityToken | None = None,
+    adapter: str = "cli",
 ) -> Decision:
     if not rehydration.ok:
-        return _decision(artifact, action, "rehydration_failed", "blocked", ["ASF001_REHYDRATION_FAILED"])
+        return _decision(artifact, action, policy, "rehydration_failed", "blocked", ["ASF001_REHYDRATION_FAILED"])
     if not route.route_hash:
-        return _decision(artifact, action, "rcc_route_failed", "blocked", ["ASF002_RCC_ROUTE_FAILED"])
+        return _decision(artifact, action, policy, "rcc_route_failed", "blocked", ["ASF002_RCC_ROUTE_FAILED"])
 
     schema_errors = shape_errors(artifact)
     if schema_errors:
-        return _decision(artifact, action, "schema_failed", "blocked", ["ASF003_SCHEMA_FAILED"])
+        return _decision(artifact, action, policy, "schema_failed", "blocked", ["ASF003_SCHEMA_FAILED"])
 
     conflicts = open_load_bearing_conflicts(artifact)
     if conflicts:
-        decision = _decision(artifact, action, "conflict_failed", "blocked", ["ASF006_CONFLICT_OPEN"])
+        decision = _decision(artifact, action, policy, "conflict_failed", "blocked", ["ASF006_CONFLICT_OPEN"])
         decision.open_conflicts = conflicts
         return decision
 
     score = consequence_score(artifact)
     if score == 0:
-        return _decision(artifact, action, "ritualistic", "blocked", ["ASF008_RITUALISTIC"])
+        return _decision(artifact, action, policy, "ritualistic", "blocked", ["ASF008_RITUALISTIC"])
 
     limiting_node, weakest = weakest_node(artifact)
     ceiling = min_level(weakest, gate_cap(artifact))
     required = policy.requirement_for(action)
     missing = blocking_gates(artifact, action, policy.required_controls_for(action))
     if missing:
-        decision = _decision(artifact, action, "missing_gate_failed", ceiling, ["ASF005_MISSING_GATE"])
+        decision = _decision(artifact, action, policy, "missing_gate_failed", ceiling, ["ASF005_MISSING_GATE"])
         decision.missing_gates = missing
         decision.limiting_evidence_node = limiting_node
         return decision
 
     if not allowed(ceiling, required):
-        decision = _decision(artifact, action, "permission_ceiling_failed", ceiling, ["ASF004_PERMISSION_CEILING_FAILED"])
+        decision = _decision(artifact, action, policy, "permission_ceiling_failed", ceiling, ["ASF004_PERMISSION_CEILING_FAILED"])
         decision.limiting_evidence_node = limiting_node
         return decision
 
     if policy.requires_human_authorization(action) and artifact.human_authorization.get("granted") is not True:
-        decision = _decision(artifact, action, "authorization_failed", ceiling, ["ASF007_AUTHORIZATION_FAILED"])
+        decision = _decision(artifact, action, policy, "authorization_failed", ceiling, ["ASF007_AUTHORIZATION_FAILED"])
         decision.limiting_evidence_node = limiting_node
         return decision
 
-    decision = _decision(artifact, action, "pass", ceiling, [])
+    if policy.requires_human_authorization(action):
+        artifact_hash = stable_hash(artifact.as_dict())
+        if not token_allows(capability_token, action=action, artifact_hash=artifact_hash, policy_hash=policy.policy_hash, adapter=adapter):
+            decision = _decision(artifact, action, policy, "authorization_failed", ceiling, ["ASF007_AUTHORIZATION_FAILED"])
+            decision.limiting_evidence_node = limiting_node
+            return decision
+
+    decision = _decision(artifact, action, policy, "pass", ceiling, [])
     decision.limiting_evidence_node = limiting_node
     return decision
 
 
-def _decision(artifact: ASFArtifact, action: str, status: str, ceiling: str, reasons: list[str]) -> Decision:
+def authorization_failed_decision(artifact: ASFArtifact, action: str, policy: Policy, ceiling: str = "blocked") -> Decision:
+    return _decision(artifact, action, policy, "authorization_failed", ceiling, ["ASF007_AUTHORIZATION_FAILED"])
+
+
+def _decision(artifact: ASFArtifact, action: str, policy: Policy, status: str, ceiling: str, reasons: list[str]) -> Decision:
     permitted = ["draft", "propose", "request_evidence"] if status != "pass" else ["draft", "propose", "request_evidence", action]
     blocked = sorted(set(["commit", "release", "update_memory", "mark_canonical", "autonomous_action"]) - set(permitted))
     next_action = {
@@ -91,6 +106,8 @@ def _decision(artifact: ASFArtifact, action: str, status: str, ceiling: str, rea
     return Decision(
         artifact_id=artifact.artifact_id,
         action=action,
+        policy_name=policy.name,
+        policy_hash=policy.policy_hash,
         status=status,
         permission_ceiling=ceiling,
         permitted_actions=sorted(set(permitted)),
@@ -155,4 +172,3 @@ def gate_cap(artifact: ASFArtifact) -> str:
             from asf.core.permissions import PERMISSION_LEVELS, rank
             cap = PERMISSION_LEVELS[max(0, min(rank(cap), rank(level) - 1))]
     return cap
-
