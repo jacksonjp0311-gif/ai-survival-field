@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Replay Report v0.1",
+  "type": "object",
+  "required": ["schema", "replay_id", "decision_hash_expected", "decision_hash_observed", "replay_pass", "drift_detected", "non_claim_lock"]
+}

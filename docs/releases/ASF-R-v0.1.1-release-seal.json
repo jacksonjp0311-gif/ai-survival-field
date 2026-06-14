@@ -1,0 +1,28 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.1",
+  "version": "v0.1.1",
+  "test_result": "Ran 25 tests OK",
+  "artifact_examples": [
+    "examples/artifacts/draft_allowed.json",
+    "examples/artifacts/release_blocked_missing_tests.json"
+  ],
+  "policy_files": [
+    "policies/default.yaml"
+  ],
+  "golden_traces": [
+    "examples/traces/draft_allowed.trace.json",
+    "examples/traces/release_block_missing_tests.trace.json"
+  ],
+  "open_wounds": [
+    "release_blocked_missing_tests"
+  ],
+  "governance_debt": [
+    "ASF-DEBT-001",
+    "ASF-DEBT-002",
+    "ASF-DEBT-003",
+    "ASF-DEBT-004"
+  ],
+  "non_claim_lock": "ASF-R v0.1.1 is an evidence seal for an experimental runtime scaffold. It is not production security, formal verification, autonomous safety, or a truth engine.",
+  "next_version": "v0.2 Policy-as-Code Hardening",
+  "release_claim_ceiling": "residual_stratified"
+}

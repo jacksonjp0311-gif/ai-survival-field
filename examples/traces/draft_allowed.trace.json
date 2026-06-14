@@ -1,0 +1,13 @@
+{
+  "schema": "ASF-GOLDEN-TRACE-v0.1",
+  "trace_id": "draft_allowed",
+  "input_artifact": "examples/artifacts/draft_allowed.json",
+  "action": "draft",
+  "expected_rehydration_ok": true,
+  "expected_route_surface": "draft_surface",
+  "expected_decision_status": "pass",
+  "expected_permission_ceiling": "exploratory",
+  "expected_wound": null,
+  "expected_ui_status": "pass",
+  "non_claim_lock": "Golden trace detects runtime geometry drift. It does not prove truth."
+}

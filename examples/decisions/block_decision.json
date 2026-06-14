@@ -9,6 +9,6 @@
   "timestamp": "2026-06-14T00:00:00+00:00",
   "reason_codes": ["ASF005_MISSING_GATE"],
   "wound_id": "ASF-WOUND-example",
+  "non_claim_lock": "Ledger records provenance only. It grants no action authority and does not prove truth.",
   "record_hash": "example"
 }
-

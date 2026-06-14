@@ -1,0 +1,6 @@
+{
+  "schema": "ASF-GOLDEN-TRACE-v0.1",
+  "trace_id": "publish_quarantined_theater_risk",
+  "status": "planned",
+  "non_claim_lock": "Planned trace is governance debt until fixture exists."
+}

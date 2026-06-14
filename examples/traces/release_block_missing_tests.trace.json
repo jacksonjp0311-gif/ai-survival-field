@@ -1,0 +1,14 @@
+{
+  "schema": "ASF-GOLDEN-TRACE-v0.1",
+  "trace_id": "release_block_missing_tests",
+  "input_artifact": "examples/artifacts/release_blocked_missing_tests.json",
+  "action": "release",
+  "expected_rehydration_ok": true,
+  "expected_route_surface": "public_claim",
+  "expected_decision_status": "missing_gate_failed",
+  "expected_permission_ceiling": "residual_stratified",
+  "expected_wound_class": "missing_gate_failed",
+  "expected_required_evidence": ["test report"],
+  "expected_ui_status": "missing_gate_failed",
+  "non_claim_lock": "Golden trace detects runtime geometry drift. It does not prove truth."
+}

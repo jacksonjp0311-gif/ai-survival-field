@@ -23,6 +23,7 @@ class LedgerRecord:
     timestamp: str
     reason_codes: list[str]
     wound_id: str | None
+    non_claim_lock: str
     record_hash: str
 
     def as_dict(self) -> dict[str, Any]:
@@ -48,11 +49,11 @@ def build_record(
         "timestamp": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "reason_codes": decision.reason_codes,
         "wound_id": wound.wound_id if wound else None,
+        "non_claim_lock": "Ledger records provenance only. It grants no action authority and does not prove truth.",
     }
     return LedgerRecord(schema="ASF-LEDGER-RECORD-v0.1", record_hash=stable_hash(data), **data)
 
 
 def verify_record(record: dict[str, Any]) -> bool:
-    required = ["schema", "artifact_id", "decision_hash", "policy_hash", "rhp_state_hash", "rcc_route_hash", "record_hash"]
+    required = ["schema", "artifact_id", "decision_hash", "policy_hash", "rhp_state_hash", "rcc_route_hash", "record_hash", "non_claim_lock"]
     return all(record.get(key) for key in required) and record.get("schema") == "ASF-LEDGER-RECORD-v0.1"
-

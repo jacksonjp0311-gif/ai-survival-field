@@ -1,0 +1,6 @@
+{
+  "schema": "ASF-GOLDEN-TRACE-v0.1",
+  "trace_id": "memory_promotion_block_missing_source",
+  "status": "planned",
+  "non_claim_lock": "Planned trace is governance debt until fixture exists."
+}

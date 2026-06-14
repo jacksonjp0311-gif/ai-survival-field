@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Invariant v0.1",
+  "type": "object",
+  "required": ["schema", "invariant_id", "statement", "scope", "failure_status", "repair_action"],
+  "properties": {
+    "schema": { "const": "ASF-INVARIANT-v0.1" },
+    "invariant_id": { "type": "string" },
+    "statement": { "type": "string" },
+    "scope": { "type": "array", "items": { "type": "string" } },
+    "failure_status": { "type": "string" },
+    "repair_action": { "type": "string" }
+  }
+}

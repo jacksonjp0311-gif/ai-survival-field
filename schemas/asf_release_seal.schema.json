@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Release Seal v0.1",
+  "type": "object",
+  "required": ["schema", "version", "test_result", "open_wounds", "governance_debt", "non_claim_lock", "next_version", "release_claim_ceiling"]
+}

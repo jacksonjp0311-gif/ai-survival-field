@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.1 scaffold: experimental production line.
+ASF-R v0.1.1 evidence seal: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -123,6 +123,24 @@ Verify the ledger record:
 python -m asf.cli ledger verify examples/decisions/block_decision.json
 ```
 
+Run the operator doctor:
+
+```powershell
+python -m asf.cli doctor
+```
+
+Show invariant registry:
+
+```powershell
+python -m asf.cli invariants
+```
+
+Show governance debt:
+
+```powershell
+python -m asf.cli debt
+```
+
 ## Runtime Geometry
 
 ```text
@@ -160,13 +178,43 @@ ai-survival-field/
   schemas/
   policies/
   examples/
+    traces/
   docs/
     architecture.md
+    adapter_safety.md
+    decision_replay.md
+    governance_debt.md
+    invariant_registry.md
     non_claim_lock.md
+    operator_doctor.md
     origin_statement.md
     production_maturity.md
     rehydration_findings.md
+    runtime_alignment_auditor.md
+    releases/
   tests/
+```
+
+## v0.1.1 Evidence Seal
+
+v0.1.1 seals the initial runtime loop before feature expansion.
+
+It adds:
+
+- invariant registry,
+- decision replay,
+- golden traces,
+- runtime alignment auditor,
+- adapter safety defaults,
+- operator doctor,
+- governance debt register,
+- release seal manifest,
+- expanded tests.
+
+Core seal rule:
+
+```text
+Before expansion, seal the loop.
 ```
 
 ## Non-Claim Lock

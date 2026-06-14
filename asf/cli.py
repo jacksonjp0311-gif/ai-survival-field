@@ -4,8 +4,12 @@ import argparse
 import json
 from pathlib import Path
 
+from asf.core.governance_debt import registry as governance_debt_registry
+from asf.core.invariants import registry as invariant_registry
 from asf.ledger.ledger import verify_record
+from asf.ledger.replay import replay_decision
 from asf.runtime import run_loop
+from asf.ui.doctor import run_doctor
 
 
 def print_json(data: object) -> None:
@@ -35,6 +39,35 @@ def command_ledger_verify(args: argparse.Namespace) -> int:
     ok = verify_record(data)
     print_json({"ledger_record_ok": ok})
     return 0 if ok else 2
+
+
+def command_doctor(args: argparse.Namespace) -> int:
+    result = run_doctor(args.root)
+    print_json(result)
+    return 0 if result["ok"] else 2
+
+
+def command_invariants(args: argparse.Namespace) -> int:
+    print_json(invariant_registry())
+    return 0
+
+
+def command_debt(args: argparse.Namespace) -> int:
+    print_json(governance_debt_registry())
+    return 0
+
+
+def command_replay(args: argparse.Namespace) -> int:
+    report = replay_decision(
+        args.artifact,
+        action=args.action,
+        expected_decision_hash=args.expected_decision_hash,
+        policy_path=args.policy,
+        root=args.root,
+        operator_authorized=args.authorized,
+    )
+    print_json(report.as_dict())
+    return 0 if report.replay_pass else 2
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -69,6 +102,25 @@ def build_parser() -> argparse.ArgumentParser:
     verify = ledger_sub.add_parser("verify")
     verify.add_argument("record")
     verify.set_defaults(func=command_ledger_verify)
+
+    doctor = sub.add_parser("doctor")
+    doctor.add_argument("--root", default=".")
+    doctor.set_defaults(func=command_doctor)
+
+    invariants = sub.add_parser("invariants")
+    invariants.set_defaults(func=command_invariants)
+
+    debt = sub.add_parser("debt")
+    debt.set_defaults(func=command_debt)
+
+    replay = sub.add_parser("replay")
+    replay.add_argument("artifact")
+    replay.add_argument("--action", required=True)
+    replay.add_argument("--expected-decision-hash", required=True)
+    replay.add_argument("--policy", default="policies/default.yaml")
+    replay.add_argument("--root", default=".")
+    replay.add_argument("--authorized", action="store_true", default=True)
+    replay.set_defaults(func=command_replay)
     return parser
 
 
@@ -79,4 +131,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
