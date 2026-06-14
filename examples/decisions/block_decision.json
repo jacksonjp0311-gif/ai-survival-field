@@ -1,0 +1,14 @@
+{
+  "schema": "ASF-LEDGER-RECORD-v0.1",
+  "artifact_id": "release-blocked-missing-tests",
+  "decision_hash": "example",
+  "policy_hash": "example",
+  "rhp_state_hash": "example",
+  "rcc_route_hash": "example",
+  "actor": "operator",
+  "timestamp": "2026-06-14T00:00:00+00:00",
+  "reason_codes": ["ASF005_MISSING_GATE"],
+  "wound_id": "ASF-WOUND-example",
+  "record_hash": "example"
+}
+

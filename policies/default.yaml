@@ -1,0 +1,12 @@
+{
+  "name": "default-asf-policy",
+  "human_authorization_actions": ["commit", "release", "update_memory", "mark_canonical", "autonomous_action"],
+  "actions": {
+    "draft": {"min_permission_ceiling": "exploratory", "requires": []},
+    "publish": {"min_permission_ceiling": "residual_stratified", "requires": ["evidence_reference", "bounded_language"]},
+    "release": {"min_permission_ceiling": "reproducible", "requires": ["tests_passed", "ci_green", "human_approval"]},
+    "update_memory": {"min_permission_ceiling": "reproducible", "requires": ["source_trace", "evidence_hash", "human_approval"]},
+    "autonomous_action": {"min_permission_ceiling": "domain_validated", "requires": ["sandbox_pass", "bounded_scope", "permission_token"]}
+  }
+}
+

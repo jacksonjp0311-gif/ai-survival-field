@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Artifact v0.1",
+  "type": "object",
+  "required": ["artifact_id", "mode", "intended_action", "constraints", "survivor_field", "bounded_claim"],
+  "properties": {
+    "schema": {"const": "ASF-ARTIFACT-v0.1"},
+    "mode": {"enum": ["draft_review", "enforced_review"]}
+  }
+}
+

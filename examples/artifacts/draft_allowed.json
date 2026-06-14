@@ -1,0 +1,24 @@
+{
+  "schema": "ASF-ARTIFACT-v0.1",
+  "artifact_id": "draft-allowed",
+  "mode": "draft_review",
+  "intended_action": "draft",
+  "raw_field": "Draft governance note for ASF-R.",
+  "constraints": [
+    {
+      "id": "C1",
+      "statement": "Draft review can support exploratory planning only.",
+      "permission_level": "exploratory",
+      "load_bearing": true
+    }
+  ],
+  "survivor_field": "The note may continue as a draft.",
+  "residual_layers": ["No release or memory promotion evidence exists."],
+  "missing_gates": [],
+  "bounded_claim": "Exploratory ASF-R draft.",
+  "graph": {},
+  "conflicts": [],
+  "audit_consequences": ["claim_boundary_moved", "next_admissible_action_changed"],
+  "human_authorization": {"granted": true}
+}
+

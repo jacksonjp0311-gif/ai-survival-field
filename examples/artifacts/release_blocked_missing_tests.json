@@ -1,0 +1,43 @@
+{
+  "schema": "ASF-ARTIFACT-v0.1",
+  "artifact_id": "release-blocked-missing-tests",
+  "mode": "enforced_review",
+  "intended_action": "release",
+  "raw_field": "Release candidate without test evidence.",
+  "constraints": [
+    {
+      "id": "C1",
+      "statement": "Release requires reproducible test and CI evidence.",
+      "permission_level": "reproducible",
+      "load_bearing": true
+    },
+    {
+      "id": "C2",
+      "statement": "Missing test evidence prevents release promotion.",
+      "permission_level": "residual_stratified",
+      "load_bearing": true
+    }
+  ],
+  "survivor_field": "The artifact can request evidence but cannot release.",
+  "residual_layers": ["Tests have not been supplied."],
+  "missing_gates": [
+    {
+      "gate_id": "G1",
+      "gate_type": "tests_passed",
+      "description": "Release requires passing test output.",
+      "blocks_permission_level": "reproducible",
+      "blocks_actions": ["release"],
+      "required_evidence": "test report",
+      "next_step": "run tests"
+    }
+  ],
+  "bounded_claim": "Release is blocked pending test evidence.",
+  "graph": {
+    "nodes": ["C1", "C2"],
+    "edges": [{"from": "C1", "to": "C2", "type": "limited_by"}]
+  },
+  "conflicts": [],
+  "audit_consequences": ["missing_gate_named", "overclaim_blocked", "next_admissible_action_changed"],
+  "human_authorization": {"granted": true}
+}
+

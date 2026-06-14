@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Wound v0.1",
+  "type": "object",
+  "required": ["schema", "wound_id", "wound_class", "subject_artifact", "intended_action"]
+}
+
