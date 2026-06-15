@@ -45,6 +45,16 @@ LEGEND = {
     "forbidden": "Deep red lock = forbidden",
 }
 
+KNOWN_STATUSES = {"pass", "blocked", "fail", "pending", "read_only", "inactive", "forbidden"}
+
+GATE_COORDINATES = [
+    (310, 150), (260, 195), (225, 250), (200, 310), (190, 375),
+    (205, 440), (245, 500), (300, 548), (365, 580), (435, 590),
+    (505, 578), (575, 555), (640, 525), (700, 485), (755, 435),
+    (800, 378), (825, 315), (820, 250), (785, 192), (735, 148),
+    (675, 118), (610, 98), (545, 88), (480, 92), (415, 112),
+]
+
 VERTICES = {
     "evidence": "Evidence / Rehydration",
     "governance": "Governance / Coherence",
@@ -75,6 +85,7 @@ def build_geometry_state(root: str | Path = ".", run_summary: dict[str, Any] | N
         "ci_evidence_status": pointer.get("remote_ci_status", "unknown"),
         "non_claim_lock": pointer.get("non_claim_lock", NON_CLAIM_LOCK),
     }
+    failed_gate_id = failed_gate(summary, wound)
     return GeometryState(
         schema="ASF-TRIADIC-GEOMETRY-STATE-v0.1",
         console_name="ASF-R Triadic Geometry Console",
@@ -87,6 +98,8 @@ def build_geometry_state(root: str | Path = ".", run_summary: dict[str, Any] | N
         cli_panel=cli_panel(summary),
         read_only_law=READ_ONLY_UI_LAW,
         non_claim_lock=NON_CLAIM_LOCK,
+        failed_gate_id=failed_gate_id,
+        events_endpoint="/events",
     )
 
 
@@ -132,7 +145,21 @@ def map_gates(root: Path, pointer: dict[str, Any], seal: dict[str, Any], summary
             status = "pending" if gate_id >= 16 else "inactive"
         else:
             status = "inactive"
-        gates.append(GeometryGate(gate_id, label, sector, status, pass_condition))
+        x, y = GATE_COORDINATES[gate_id - 1]
+        label_x, label_y = label_coordinates(x, y)
+        gates.append(GeometryGate(
+            gate_id,
+            label,
+            sector,
+            status,
+            pass_condition,
+            x=x,
+            y=y,
+            label_x=label_x,
+            label_y=label_y,
+            failed=status in {"blocked", "fail"},
+            wound_linked=gate_id == failed_gate(summary, summary.get("wound_package") or summary.get("wound") or {}),
+        ))
     return gates
 
 
@@ -143,6 +170,7 @@ def wound_panel(wound: dict[str, Any], decision: dict[str, Any]) -> dict[str, An
         "status": "blocked",
         "wound_id": wound.get("wound_id", "unknown"),
         "failed_gate": "Missing Gate Check",
+        "failed_gate_id": 12,
         "failure_class": wound.get("wound_class", decision.get("status", "unknown")),
         "decision": decision.get("status", "blocked"),
         "permission_ceiling": decision.get("permission_ceiling", "unknown"),
@@ -155,11 +183,40 @@ def wound_panel(wound: dict[str, Any], decision: dict[str, Any]) -> dict[str, An
 
 
 def cli_panel(summary: dict[str, Any]) -> dict[str, Any]:
+    stream = summary.get("stream") or [
+        "12:34:10.128 [INIT] Runtime initialized (read-only)",
+        "12:34:10.246 [GATE 01] Latest Pointer Loaded ............... PASS",
+        "12:34:10.312 [GATE 02] Rehydration Passed .................. PASS",
+        "12:34:10.481 [GATE 07] Policy Loaded ....................... PASS",
+        "12:34:10.612 [GATE 11] Decision Computed ................... PASS",
+        "12:34:10.733 [GATE 12] Permission Checked .................. BLOCKED",
+        "12:34:10.734 [DECISION] Blocked by Permission Ceiling",
+        "12:34:10.735 [GATE 15] Wound Emitted ....................... PASS",
+        "12:34:11.492 [GATE 19] Repair Replay Passed ................ PASS",
+        "12:34:11.713 [GATE 24] Closure Validation Passed ............ PASS",
+        "12:34:11.822 [END] Full-loop run complete (observe only)",
+    ]
     return {
-        "command": summary.get("command", "read-only state load"),
+        "command": summary.get("command", "python -m asf.cli full-loop run --geometry"),
         "phase": summary.get("phase", "inspection"),
         "exit_code": summary.get("exit_code", "none"),
         "follow": summary.get("follow", False),
         "mode": "read_only_observe",
-        "stream": summary.get("stream", []),
+        "stream": stream,
     }
+
+
+def label_coordinates(x: int, y: int) -> tuple[int, int]:
+    center_x, center_y = 520, 360
+    dx = x - center_x
+    dy = y - center_y
+    offset_x = 76 if dx >= 0 else -76
+    offset_y = 18 if abs(dx) > 120 else (-38 if dy < 0 else 42)
+    return x + offset_x, y + offset_y
+
+
+def failed_gate(summary: dict[str, Any], wound: dict[str, Any]) -> int | None:
+    if wound:
+        return int(wound.get("failed_gate_id") or 12)
+    failed = summary.get("failed_gates") or []
+    return int(failed[0]) if failed else None

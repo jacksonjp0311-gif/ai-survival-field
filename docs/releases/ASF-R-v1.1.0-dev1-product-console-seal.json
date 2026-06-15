@@ -1,0 +1,29 @@
+{
+  "schema": "ASF-OBSERVABILITY-SEAL-v1.1.0-dev1",
+  "version": "ASF-R v1.1.0-dev1",
+  "implementation_commit": "pending_until_commit",
+  "capability": "product_grade_triadic_geometry_console_polish",
+  "package_version": "1.1.0.dev1",
+  "test_count_minimum": 267,
+  "test_result": "Ran 267 tests OK locally",
+  "authority_expansion": false,
+  "mutation_enabled": "unchanged_from_v1_0_0",
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "ui_mode": "read_only_observe",
+  "gate_count": 25,
+  "streaming_endpoint": "GET /events",
+  "snapshot_endpoint": "GET /state.json",
+  "mutation_endpoints": [],
+  "visual_targets": [
+    "top header badges",
+    "left legend sidebar",
+    "labeled neon triadic gate loop",
+    "right live CLI panel",
+    "red wound package panel",
+    "bottom status cards",
+    "failed-gate-to-wound connector"
+  ],
+  "proof": "ASF-R v1.1.0-dev1 polishes the Triadic Geometry Console toward a product-grade read-only neon gate surface without adding authorization, repair, wound closure, policy mutation, memory mutation, enforce_full, or general authority.",
+  "non_claim_lock": "The Triadic Geometry Console observes and illuminates the governed loop only. It does not prove truth, make AI safe, provide formal verification, provide production security, authorize autonomous action, or grant repair authority."
+}

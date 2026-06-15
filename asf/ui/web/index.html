@@ -7,33 +7,86 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <header>
-      <div>
-        <h1>ASF-R Triadic Geometry Console</h1>
-        <p>READ-ONLY OBSERVE</p>
-      </div>
-      <div id="legend"></div>
-    </header>
-    <main>
-      <section id="geometry">
-        <svg id="triad" viewBox="0 0 900 620" role="img" aria-label="ASF-R triadic gate geometry"></svg>
-      </section>
-      <aside>
-        <section class="panel">
-          <h2>Live CLI Run</h2>
-          <pre id="cli">loading...</pre>
+    <div class="console-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="tri-logo" aria-hidden="true">
+            <svg viewBox="0 0 64 64">
+              <path d="M32 5 L58 55 H6 Z"></path>
+              <path d="M32 19 L45 45 H19 Z"></path>
+              <circle cx="32" cy="35" r="4"></circle>
+            </svg>
+          </div>
+          <div>
+            <h1>ASF-R Triadic Geometry Console</h1>
+            <p>Read-Only Runtime Observability Surface <span>This adds sight, not power.</span></p>
+          </div>
+        </div>
+        <div class="top-badges">
+          <div class="badge">READ-ONLY OBSERVE</div>
+          <div class="badge stacked"><small>LOCAL RUNTIME</small><strong><i></i>127.0.0.1</strong></div>
+          <div class="badge stacked"><small>FOLLOW MODE</small><strong><i></i>ON</strong></div>
+          <div class="shield">⌘</div>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <aside class="left-rail">
+          <section class="rail-card">
+            <h2>Gate Legend</h2>
+            <div class="legend-row"><b class="dot pass"></b>Passed</div>
+            <div class="legend-row"><b class="dot pending"></b>Active / Pending</div>
+            <div class="legend-row"><b class="dot read_only"></b>Read-Only Evidence</div>
+            <div class="legend-row"><b class="dot blocked"></b>Blocked / Fail</div>
+            <div class="legend-row"><b class="dot inactive"></b>Inactive / Skipped</div>
+          </section>
+          <section class="rail-card runtime-card">
+            <h2>Runtime View</h2>
+            <strong>READ-ONLY</strong>
+            <h2>Gate Count</h2>
+            <strong id="gate-count">25 / 25</strong>
+            <h2>Order</h2>
+            <strong>Runtime Sequence</strong>
+            <h2>Geometry</h2>
+            <strong>Triad Loop</strong>
+          </section>
+        </aside>
+
+        <section class="geometry-stage">
+          <svg id="triad" viewBox="0 0 1040 690" role="img" aria-label="ASF-R triadic gate geometry"></svg>
         </section>
-        <section class="panel wound">
-          <h2>Wound Package</h2>
-          <pre id="wound">loading...</pre>
-        </section>
-        <section class="panel">
-          <h2>Read-Only UI Law</h2>
-          <ul id="law"></ul>
-        </section>
-      </aside>
-    </main>
-    <footer id="status"></footer>
+
+        <aside class="right-rail">
+          <section class="panel cli-panel">
+            <div class="panel-head">
+              <h2>Live CLI Run</h2>
+              <span>READ-ONLY OBSERVE</span>
+            </div>
+            <div class="command-label">COMMAND (READ-ONLY)</div>
+            <code id="command-line">$ python -m asf.cli full-loop run --geometry</code>
+            <div id="cli-stream" class="stream"></div>
+            <div class="metric-row">
+              <div><small>Current Phase</small><strong id="metric-phase">loading</strong></div>
+              <div><small>Exit Code</small><strong id="metric-exit">none</strong></div>
+              <div><small>Follow Mode</small><strong id="metric-follow">on</strong></div>
+              <div><small>Output</small><strong>streaming</strong></div>
+            </div>
+          </section>
+
+          <section class="panel wound-panel" id="wound-panel">
+            <div class="panel-head wound-head">
+              <h2>Wound Package</h2>
+              <span id="wound-gate">NO ACTIVE WOUND</span>
+            </div>
+            <div id="wound-fields" class="wound-fields"></div>
+          </section>
+        </aside>
+      </main>
+
+      <footer id="status-cards" class="status-cards"></footer>
+    </div>
+
+    <div id="gate-drawer" class="drawer" hidden></div>
     <script src="geometry.js"></script>
     <script src="app.js"></script>
   </body>

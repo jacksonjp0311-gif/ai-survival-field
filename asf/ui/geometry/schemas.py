@@ -34,6 +34,12 @@ class GeometryGate:
     status: str
     pass_condition: str
     detail: str = ""
+    x: int = 0
+    y: int = 0
+    label_x: int = 0
+    label_y: int = 0
+    failed: bool = False
+    wound_linked: bool = False
 
     def as_dict(self) -> dict[str, Any]:
         return dict(self.__dict__)
@@ -52,6 +58,8 @@ class GeometryState:
     cli_panel: dict[str, Any]
     read_only_law: list[str]
     non_claim_lock: str
+    failed_gate_id: int | None = None
+    events_endpoint: str = "/events"
 
     def as_dict(self) -> dict[str, Any]:
         return dict(self.__dict__)

@@ -85,7 +85,7 @@ def run_full_loop(root: str | Path = ".", *, geometry: bool = False) -> dict[str
     summary: dict[str, Any] = {
         "schema": "ASF-FULL-LOOP-SUMMARY-v0.1",
         "run_id": run_id,
-        "command": "python -m asf.full_loop",
+        "command": "python -m asf.cli full-loop run --geometry",
         "phase": "complete",
         "exit_code": 0,
         "follow": geometry,

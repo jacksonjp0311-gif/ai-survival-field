@@ -5,6 +5,17 @@ observing the governed runtime loop.
 
 It is not a control panel.
 
+v1.1.0-dev1 evolves the surface toward the product-grade target:
+
+- top header badges,
+- left gate legend,
+- labeled 25-gate neon triadic loop,
+- live CLI stream panel,
+- red wound/failure package panel,
+- bottom status cards,
+- `GET /events` Server-Sent Events stream,
+- no mutation endpoints.
+
 It opens beside the full loop, follows runtime state, lights every gate in the
 path, and surfaces wound/failure packages when propagation is blocked.
 

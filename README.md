@@ -48,7 +48,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v1.1.0-dev0 triadic geometry console observability hardening.
+ASF-R v1.1.0-dev1 product-grade triadic geometry console polish.
 ```
 
 The latest stable release tag remains `v1.0.0`. The `main` branch now carries
