@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Repair Replay","type":"object","required":["schema","replay_id","repair_plan_hash","dry_run_hash","validation_hash","replay_pass","drift_detected","mutation_performed","repair_performed","wound_closed","authority_granted","non_claim_lock"]}

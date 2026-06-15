@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.5 repair planner dry run: experimental production line.
+ASF-R v0.6 repair validation replay: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -87,6 +87,9 @@ still performing no mutation.
 
 ASF-R v0.5 proves that wounds can become bounded repair plans, repair dry-runs,
 validation reports, and authorization requests without performing repair.
+
+ASF-R v0.6 proves that repair plans can become replayable evidence without
+performing repair, closing wounds, or granting authority.
 
 ## What This Version Does Not Claim
 
@@ -205,6 +208,12 @@ Validate a repair plan:
 
 ```powershell
 python -m asf.cli repair validate examples/repair_plans/missing_gate_repair_plan.json
+```
+
+Replay a repair plan:
+
+```powershell
+python -m asf.cli repair replay examples/repair_plans/missing_gate_repair_plan.json
 ```
 
 ## Runtime Geometry
@@ -415,6 +424,30 @@ ASF-R may not perform or authorize repair.
 v0.5 does not enable live mutation, repair execution, wound closure,
 self-healing mutation, or `enforce_full`. The next operation is `ASF-R v0.6
 Repair Validation Replay`.
+
+## v0.6 Repair Validation Replay
+
+v0.6 converts repair plans into replayable evidence.
+
+It adds:
+
+- latest-pointer alignment guard,
+- repair replay report,
+- repair replay CLI,
+- repair replay schema,
+- latest pointer alignment schema,
+- v0.6 release seal.
+
+Core v0.6 law:
+
+```text
+A repair plan is not a repair.
+A repair replay is not wound closure.
+```
+
+v0.6 may prove repair-path coherence. It may not perform repair, close the wound,
+grant authority, enable `enforce_full`, or enable self-healing mutation. The next
+operation is `ASF-R v0.7 Human-Authorized Bounded Repair`.
 
 ## Non-Claim Lock
 

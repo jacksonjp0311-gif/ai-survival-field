@@ -18,6 +18,7 @@ from asf.repair.repair_dry_run import dry_run as repair_dry_run
 from asf.repair.repair_plan import RepairPlan
 from asf.repair.repair_planner import plan_from_wound
 from asf.repair.repair_report import build_report as build_repair_report
+from asf.repair.repair_replay import replay_repair
 from asf.repair.repair_validation import validate_plan
 from asf.runtime import run_loop
 from asf.ui.doctor import run_doctor
@@ -163,6 +164,13 @@ def command_repair_report(args: argparse.Namespace) -> int:
     return 0 if validation.valid else 2
 
 
+def command_repair_replay(args: argparse.Namespace) -> int:
+    plan = RepairPlan.from_dict(_load_json(args.repair_plan))
+    report = replay_repair(plan, expected_repair_plan_hash=args.expected_repair_plan_hash)
+    print_json(report.as_dict())
+    return 0 if report.replay_pass else 2
+
+
 def command_adapter_report(args: argparse.Namespace) -> int:
     path = Path(args.report_id)
     if path.is_file():
@@ -264,6 +272,10 @@ def build_parser() -> argparse.ArgumentParser:
     repair_report = repair_sub.add_parser("report")
     repair_report.add_argument("repair_plan")
     repair_report.set_defaults(func=command_repair_report)
+    repair_replay = repair_sub.add_parser("replay")
+    repair_replay.add_argument("repair_plan")
+    repair_replay.add_argument("--expected-repair-plan-hash", default=None)
+    repair_replay.set_defaults(func=command_repair_replay)
 
     adapter = sub.add_parser("adapter")
     adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)

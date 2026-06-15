@@ -48,6 +48,11 @@ INVARIANTS = [
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-028", "Repair cannot bypass policy.", ["repair", "policy"], "block", "preserve or diff policy hash"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-029", "Repair cannot bypass authorization receipt.", ["repair", "authorization"], "block", "require receipt"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-030", "Self-healing mutation remains forbidden.", ["repair", "self_healing"], "block", "stay in dry-run planning"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-031", "Latest pointer commit must not be pending.", ["rehydration", "context"], "block", "write observed remote commit"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-032", "Repair replay is not wound closure.", ["repair", "replay"], "block", "preserve wound until closure evidence"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-033", "Repair replay must not mutate state.", ["repair", "replay"], "block", "replay evidence only"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-034", "Repair replay cannot grant authority.", ["repair", "authorization"], "block", "request external authorization"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-035", "Repair replay must detect repair-plan hash drift.", ["repair", "replay"], "block", "compare expected and observed hashes"),
 ]
 
 

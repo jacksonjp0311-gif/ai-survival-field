@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Latest Pointer Alignment","type":"object","required":["schema","ok","latest_commit","failures","non_claim_lock"]}

@@ -1,0 +1,16 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.6",
+  "version": "ASF-R v0.6",
+  "capability": "repair_validation_replay",
+  "test_count_minimum": 130,
+  "test_result": "Ran 130 tests OK",
+  "mutation_enabled": false,
+  "repair_performed": false,
+  "wound_closure_enabled": false,
+  "authority_granted": false,
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "proof": "repair plans can be replayed from bounded plan, dry-run, and validation evidence without mutation or wound closure",
+  "next_operation": "ASF-R v0.7 Human-Authorized Bounded Repair",
+  "non_claim_lock": "ASF-R v0.6 replays repair-path evidence only. It does not perform repairs, close wounds, grant authority, enable enforce_full, or enable self-healing mutation."
+}
