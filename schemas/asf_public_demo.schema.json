@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Public Demo","type":"object","required":["schema","headline","loop","dogfood_hash","mutation_performed","non_claim_lock"]}

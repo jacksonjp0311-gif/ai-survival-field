@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF CI Evidence","type":"object","required":["schema","commit","workflow_name","status","test_count","source","mutation_performed","artifact_name","evidence_hash","non_claim_lock"]}

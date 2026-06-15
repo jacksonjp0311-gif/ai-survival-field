@@ -5,6 +5,9 @@ import json
 from pathlib import Path
 
 from asf.adapters.block_enforcer import enforce_block_only, event_for_artifact
+from asf.ci.evidence import build_ci_evidence, verify_ci_evidence
+from asf.demo import public_demo
+from asf.dogfood import run_dogfood
 from asf.adapters.dry_run import simulate
 from asf.adapters.event import AdapterEvent
 from asf.adapters.enforcement_report import report_invariant_ok
@@ -222,6 +225,30 @@ def command_wound_closure_close(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_ci_evidence(args: argparse.Namespace) -> int:
+    evidence = build_ci_evidence(commit=args.commit, test_count=args.test_count, status=args.status, source=args.source)
+    print_json(evidence.as_dict())
+    return 0
+
+
+def command_ci_verify(args: argparse.Namespace) -> int:
+    evidence = _load_json(args.evidence)
+    result = verify_ci_evidence(evidence)
+    print_json(result)
+    return 0 if result["ok"] else 2
+
+
+def command_dogfood_run(args: argparse.Namespace) -> int:
+    report = run_dogfood(args.root)
+    print_json(report)
+    return 0 if report["repair_replay_pass"] and report["closure_validation_pass"] else 2
+
+
+def command_demo(args: argparse.Namespace) -> int:
+    print_json(public_demo(args.root))
+    return 0
+
+
 def command_adapter_report(args: argparse.Namespace) -> int:
     path = Path(args.report_id)
     if path.is_file():
@@ -360,6 +387,28 @@ def build_parser() -> argparse.ArgumentParser:
     closure_close.add_argument("closure_request")
     closure_close.add_argument("--execution-report", required=True)
     closure_close.set_defaults(func=command_wound_closure_close)
+
+    ci = sub.add_parser("ci")
+    ci_sub = ci.add_subparsers(dest="ci_command", required=True)
+    ci_evidence = ci_sub.add_parser("evidence")
+    ci_evidence.add_argument("--commit", required=True)
+    ci_evidence.add_argument("--test-count", type=int, required=True)
+    ci_evidence.add_argument("--status", default="local_pass")
+    ci_evidence.add_argument("--source", default="local")
+    ci_evidence.set_defaults(func=command_ci_evidence)
+    ci_verify = ci_sub.add_parser("verify")
+    ci_verify.add_argument("evidence")
+    ci_verify.set_defaults(func=command_ci_verify)
+
+    dogfood = sub.add_parser("dogfood")
+    dogfood_sub = dogfood.add_subparsers(dest="dogfood_command", required=True)
+    dogfood_run = dogfood_sub.add_parser("run")
+    dogfood_run.add_argument("--root", default=".")
+    dogfood_run.set_defaults(func=command_dogfood_run)
+
+    demo = sub.add_parser("demo")
+    demo.add_argument("--root", default=".")
+    demo.set_defaults(func=command_demo)
 
     adapter = sub.add_parser("adapter")
     adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)

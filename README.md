@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.8 controlled wound closure: experimental production line.
+ASF-R v0.9 remote CI evidence and dogfood: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -98,6 +98,9 @@ ASF-R v0.8 proves that wound closure can be requested, validated, and recorded
 only against exact post-repair evidence without repair mutation or general
 authority.
 
+ASF-R v0.9 proves that the runtime can emit CI evidence, dogfood reports, and a
+public demo path without expanding mutation authority.
+
 ## What This Version Does Not Claim
 
 ASF-R does not:
@@ -137,6 +140,18 @@ Render the operator UI:
 
 ```powershell
 python -m asf.cli ui examples/artifacts/release_blocked_missing_tests.json --action release
+```
+
+Run the public demo:
+
+```powershell
+python -m asf.cli demo
+```
+
+Run dogfood:
+
+```powershell
+python -m asf.cli dogfood run
 ```
 
 Verify the ledger record:
@@ -518,6 +533,30 @@ hash, repair execution hash, post-repair evidence hash, authorization receipt
 hash, and closure-specific authorizer. It performs no repair mutation and grants
 no general authority. The next operation is `ASF-R v0.9 Remote CI Evidence and
 Dogfood`.
+
+## v0.9 Remote CI Evidence and Dogfood
+
+v0.9 adds public recoverability evidence.
+
+Core v0.9 law:
+
+```text
+Local tests prove local coherence.
+Remote CI proves recoverable public coherence.
+Dogfooding proves operational contact.
+```
+
+It adds:
+
+- CI evidence records,
+- GitHub Actions evidence artifact upload,
+- dogfood report,
+- public demo command,
+- v0.9 release seal.
+
+v0.9 does not expand repair authority, enable autonomous repair, enable
+self-healing mutation, or enable `enforce_full`. Remote CI status remains
+`remote_pending` until GitHub Actions records a run.
 
 ## Non-Claim Lock
 

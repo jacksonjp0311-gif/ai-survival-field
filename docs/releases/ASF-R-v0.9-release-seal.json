@@ -1,0 +1,17 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.9",
+  "version": "ASF-R v0.9",
+  "capability": "remote_ci_evidence_and_dogfood",
+  "test_count_minimum": 200,
+  "test_result": "Ran 200 tests OK",
+  "remote_ci_workflow": ".github/workflows/asf-guard.yml",
+  "remote_ci_evidence_artifact": "asf-ci-evidence",
+  "dogfood_enabled": true,
+  "public_demo_enabled": true,
+  "mutation_enabled": "bounded_authorized_local_only",
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "proof": "ASF-R can produce local CI evidence, remote CI artifact hooks, dogfood reports, and public demo outputs without expanding mutation authority",
+  "next_operation": "ASF-R v1.0 Bounded Production Release Candidate",
+  "non_claim_lock": "ASF-R v0.9 improves public recoverability evidence. It does not claim production security, formal verification, autonomous safety, or remote CI success until GitHub Actions records it."
+}

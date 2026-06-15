@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Dogfood Report","type":"object","required":["schema","draft_status","blocked_release_status","repair_replay_pass","closure_validation_pass","mutation_performed","dogfood_hash","non_claim_lock"]}

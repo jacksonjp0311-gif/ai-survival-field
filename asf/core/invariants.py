@@ -68,6 +68,11 @@ INVARIANTS = [
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-053", "Wound closure requires closure-specific authorizer.", ["wound", "authorization"], "block", "request closure authorization"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-054", "Controlled wound closure performs no repair mutation.", ["wound", "closure"], "block", "record closure only"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-055", "Controlled wound closure grants no general authority.", ["wound", "authorization"], "block", "scope closure to exact wound"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-056", "Local tests prove local coherence only.", ["ci", "release"], "block", "capture remote CI evidence"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-057", "Remote CI evidence must be recorded before public recoverability claims.", ["ci", "provenance"], "block", "upload CI evidence artifact"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-058", "Dogfood reports do not prove production readiness.", ["dogfood"], "block", "preserve non-claim lock"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-059", "Public demos must not mutate state.", ["demo"], "block", "demo read-only evidence"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-060", "Remote CI must not mutate repository state.", ["ci", "workflow"], "block", "keep workflow read-only"),
 ]
 
 
