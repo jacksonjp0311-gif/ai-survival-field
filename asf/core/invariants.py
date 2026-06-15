@@ -61,6 +61,13 @@ INVARIANTS = [
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-046", "Bounded repair must leave wound_closed false.", ["repair", "wound"], "block", "defer wound closure"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-047", "Self-healing mutation remains forbidden.", ["repair", "self_healing"], "block", "require human authorization"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-048", "enforce_full remains forbidden.", ["adapter", "repair"], "block", "stay out of enforce_full"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-049", "A repaired wound is not a closed wound.", ["wound", "closure"], "block", "run closure validation"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-050", "Wound closure requires exact wound identity.", ["wound", "closure"], "block", "bind wound_id"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-051", "Wound closure requires post-repair evidence hash.", ["wound", "evidence"], "block", "bind post_repair_hash"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-052", "Wound closure requires repair execution hash.", ["wound", "repair"], "block", "bind repair_execution_hash"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-053", "Wound closure requires closure-specific authorizer.", ["wound", "authorization"], "block", "request closure authorization"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-054", "Controlled wound closure performs no repair mutation.", ["wound", "closure"], "block", "record closure only"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-055", "Controlled wound closure grants no general authority.", ["wound", "authorization"], "block", "scope closure to exact wound"),
 ]
 
 

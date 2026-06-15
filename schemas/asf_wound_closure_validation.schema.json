@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Wound Closure Validation","type":"object","required":["schema","valid","failures","wound_id","wound_closure_eligible","non_claim_lock"]}

@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.7 human-authorized bounded repair: experimental production line.
+ASF-R v0.8 controlled wound closure: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -93,6 +93,10 @@ performing repair, closing wounds, or granting authority.
 
 ASF-R v0.7 proves that a human can authorize one bounded local repair plan for
 allowlisted low-risk repair classes without granting general repair authority.
+
+ASF-R v0.8 proves that wound closure can be requested, validated, and recorded
+only against exact post-repair evidence without repair mutation or general
+authority.
 
 ## What This Version Does Not Claim
 
@@ -488,6 +492,32 @@ v0.7 does not enable autonomous repair, self-healing mutation, `enforce_full`,
 wound closure, policy logic mutation, validator logic mutation, adapter
 enforcement mutation, memory updates, releases, or external mutation APIs. The
 next operation is `ASF-R v0.8 Controlled Wound Closure`.
+
+## v0.8 Controlled Wound Closure
+
+v0.8 separates repair from closure.
+
+Core v0.8 law:
+
+```text
+A repaired wound is not a closed wound.
+A wound may close only after post-repair evidence, replay, authorization, and closure-specific validation.
+```
+
+It adds:
+
+- wound closure request,
+- wound closure validation,
+- wound closure record,
+- closure schemas,
+- closure CLI,
+- v0.8 release seal.
+
+Controlled closure requires exact wound identity, repair plan hash, repair replay
+hash, repair execution hash, post-repair evidence hash, authorization receipt
+hash, and closure-specific authorizer. It performs no repair mutation and grants
+no general authority. The next operation is `ASF-R v0.9 Remote CI Evidence and
+Dogfood`.
 
 ## Non-Claim Lock
 

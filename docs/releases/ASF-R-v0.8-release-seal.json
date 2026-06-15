@@ -1,0 +1,15 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.8",
+  "version": "ASF-R v0.8",
+  "capability": "controlled_wound_closure",
+  "test_count_minimum": 180,
+  "test_result": "Ran 180 tests OK",
+  "closure_enabled": "controlled_exact_wound_only",
+  "repair_mutation_enabled": "bounded_authorized_local_only",
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "general_authority_enabled": false,
+  "proof": "wound closure can be requested, validated, and recorded only against exact post-repair evidence without repair mutation or general authority",
+  "next_operation": "ASF-R v0.9 Remote CI Evidence and Dogfood",
+  "non_claim_lock": "ASF-R v0.8 records controlled wound closure only. It does not prove production safety, grant general repair authority, enable self-healing mutation, or enable enforce_full."
+}

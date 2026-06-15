@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Wound Closure Request","type":"object","required":["schema","wound_id","repair_plan_hash","repair_replay_hash","repair_execution_hash","post_repair_hash","authorization_receipt_hash","closure_authorizer","closure_scope","non_claim_lock"]}

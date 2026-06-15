@@ -24,6 +24,7 @@ from asf.repair.repair_replay import replay_repair
 from asf.repair.repair_validation import validate_plan
 from asf.runtime import run_loop
 from asf.ui.doctor import run_doctor
+from asf.wounds.closure import WoundClosureRequest, build_closure_request, close_wound, validate_closure
 
 
 def print_json(data: object) -> None:
@@ -194,6 +195,33 @@ def command_repair_evidence(args: argparse.Namespace) -> int:
     return 0 if report.get("evidence") else 2
 
 
+def command_wound_closure_request(args: argparse.Namespace) -> int:
+    execution = _load_json(args.execution_report)
+    request = build_closure_request(execution, wound_id=args.wound_id, closure_authorizer=args.authorizer)
+    print_json(request.as_dict())
+    return 0
+
+
+def command_wound_closure_validate(args: argparse.Namespace) -> int:
+    request = WoundClosureRequest.from_dict(_load_json(args.closure_request))
+    execution = _load_json(args.execution_report)
+    validation = validate_closure(request, execution)
+    print_json(validation.as_dict())
+    return 0 if validation.valid else 2
+
+
+def command_wound_closure_close(args: argparse.Namespace) -> int:
+    request = WoundClosureRequest.from_dict(_load_json(args.closure_request))
+    execution = _load_json(args.execution_report)
+    try:
+        record = close_wound(request, execution)
+    except ValueError as exc:
+        print_json({"closed": False, "failures": str(exc).split(","), "non_claim_lock": "Failed closure grants no authority."})
+        return 2
+    print_json(record.as_dict())
+    return 0
+
+
 def command_adapter_report(args: argparse.Namespace) -> int:
     path = Path(args.report_id)
     if path.is_file():
@@ -314,6 +342,24 @@ def build_parser() -> argparse.ArgumentParser:
     repair_evidence = repair_sub.add_parser("evidence")
     repair_evidence.add_argument("execution_report")
     repair_evidence.set_defaults(func=command_repair_evidence)
+
+    wound = sub.add_parser("wound")
+    wound_sub = wound.add_subparsers(dest="wound_command", required=True)
+    closure = wound_sub.add_parser("closure")
+    closure_sub = closure.add_subparsers(dest="closure_command", required=True)
+    closure_request = closure_sub.add_parser("request")
+    closure_request.add_argument("execution_report")
+    closure_request.add_argument("--wound-id", required=True)
+    closure_request.add_argument("--authorizer", required=True)
+    closure_request.set_defaults(func=command_wound_closure_request)
+    closure_validate = closure_sub.add_parser("validate")
+    closure_validate.add_argument("closure_request")
+    closure_validate.add_argument("--execution-report", required=True)
+    closure_validate.set_defaults(func=command_wound_closure_validate)
+    closure_close = closure_sub.add_parser("close")
+    closure_close.add_argument("closure_request")
+    closure_close.add_argument("--execution-report", required=True)
+    closure_close.set_defaults(func=command_wound_closure_close)
 
     adapter = sub.add_parser("adapter")
     adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)
