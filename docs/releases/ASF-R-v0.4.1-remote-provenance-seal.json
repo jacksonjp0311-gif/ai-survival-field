@@ -1,0 +1,19 @@
+{
+  "schema": "ASF-REMOTE-PROVENANCE-SEAL-v0.4.1",
+  "version": "ASF-R v0.4.1",
+  "local_commit": "c69cecf",
+  "remote_integration_commit": "7e26416",
+  "remote_url": "https://github.com/jacksonjp0311-gif/ai-survival-field",
+  "branch": "main",
+  "push_status": "success",
+  "test_count": 79,
+  "latest_release_seal": "docs/releases/ASF-R-v0.4-release-seal.json",
+  "current_capability": "controlled_block_enforcement",
+  "mutation_enabled": false,
+  "repair_enabled": false,
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "remote_provenance_law": "Local evidence is useful. Remote provenance is recoverable. No production-line maturity claim should outrun remote recoverability.",
+  "next_operation": "ASF-R v0.5 Repair Planner Dry Run",
+  "non_claim_lock": "Remote provenance seal confirms recoverability of the artifact lineage. It does not claim production security, formal verification, autonomous repair, or live mutation authority."
+}
