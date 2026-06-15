@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.2 policy-as-code hardening: experimental production line.
+ASF-R v0.3 adapter enforcement dry run: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -75,6 +75,12 @@ artifact
 -> ledger record
 -> operator geometry
 ```
+
+ASF-R v0.2 proves that explicit policy controls continuation.
+
+ASF-R v0.3 proves that adapters can observe proposed real-world actions, package
+them into governance events, run the runtime loop, emit evidence, and simulate
+enforcement without mutating state.
 
 ## What This Version Does Not Claim
 
@@ -147,6 +153,24 @@ Compare policies:
 python -m asf.cli policy diff policies/default.yaml policies/strict.json
 ```
 
+Observe an adapter event:
+
+```powershell
+python -m asf.cli adapter observe examples/adapter_events/filesystem_write_blocked.json
+```
+
+Run adapter dry-run enforcement:
+
+```powershell
+python -m asf.cli adapter dry-run examples/adapter_events/filesystem_write_blocked.json
+```
+
+Run the loop in dry-run adapter mode:
+
+```powershell
+python -m asf.cli loop dry-run examples/artifacts/release_blocked_missing_tests.json --action release
+```
+
 ## Runtime Geometry
 
 ```text
@@ -184,9 +208,12 @@ ai-survival-field/
   schemas/
   policies/
   examples/
+    adapter_events/
     traces/
   docs/
     architecture.md
+    adapter_dry_run.md
+    adapter_event_model.md
     adapter_safety.md
     authorization_receipts.md
     capability_tokens.md
@@ -200,6 +227,7 @@ ai-survival-field/
     rehydration_findings.md
     runtime_alignment_auditor.md
     self_healing_horizon.md
+    v0.3_dry_run_boundary.md
     releases/
   tests/
 ```
@@ -252,8 +280,35 @@ Unknown is still not pass.
 No adapter may self-authorize.
 ```
 
-Adapters remain non-mutating by default. Live enforcement is reserved for
-`ASF-R v0.3 Adapter Enforcement Dry Run`.
+Adapters remain non-mutating by default.
+
+## v0.3 Adapter Enforcement Dry Run
+
+v0.3 proves that ASF-R can reach the boundary of real-world action without
+crossing into unsafe mutation.
+
+It adds:
+
+- adapter event model,
+- enforcement report,
+- dry-run mutation simulator,
+- filesystem adapter dry-run surface,
+- GitHub adapter dry-run surface,
+- agent adapter dry-run surface,
+- adapter mode enforcement,
+- adapter event hash binding in the ledger,
+- v0.3 release seal.
+
+Core v0.3 law:
+
+```text
+Dry-run may reveal the shape of a repair or mutation.
+Dry-run may not perform it.
+```
+
+v0.3 does not enable live mutation, live self-healing, production enforcement,
+or autonomous authority. Live enforcement is reserved for `ASF-R v0.4 Controlled
+Enforcement Gate`.
 
 ## Non-Claim Lock
 

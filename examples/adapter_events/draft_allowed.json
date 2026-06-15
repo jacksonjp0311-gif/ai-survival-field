@@ -1,0 +1,17 @@
+{
+  "schema": "ASF-ADAPTER-EVENT-v0.1",
+  "adapter_name": "filesystem",
+  "adapter_mode": "dry_run",
+  "observed_action": "draft",
+  "source_surface": "filesystem",
+  "target_surface": "draft_surface",
+  "artifact_reference": "examples/artifacts/draft_allowed.json",
+  "proposed_mutation": {
+    "operation": "preview_note",
+    "path": "notes/draft.md"
+  },
+  "actor": "operator",
+  "timestamp": "2026-06-14T00:00:00+00:00",
+  "environment": "development",
+  "metadata": {}
+}

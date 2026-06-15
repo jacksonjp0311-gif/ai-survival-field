@@ -1,0 +1,17 @@
+{
+  "schema": "ASF-ADAPTER-EVENT-v0.1",
+  "adapter_name": "agent",
+  "adapter_mode": "dry_run",
+  "observed_action": "autonomous_action",
+  "source_surface": "agent_runtime",
+  "target_surface": "agent_runtime",
+  "artifact_reference": "examples/artifacts/release_ready.json",
+  "proposed_mutation": {
+    "operation": "call_tool",
+    "tool": "release"
+  },
+  "actor": "agent",
+  "timestamp": "2026-06-14T00:00:00+00:00",
+  "environment": "development",
+  "metadata": {}
+}

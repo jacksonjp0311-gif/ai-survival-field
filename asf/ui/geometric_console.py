@@ -7,7 +7,15 @@ from asf.rhp.rehydration import RehydrationReport
 from asf.wounds.wound import WoundPackage
 
 
-def render(rehydration: RehydrationReport, route: RCCRoute, decision: Decision, wound: WoundPackage | None, policy: Policy | None = None) -> str:
+def render(
+    rehydration: RehydrationReport,
+    route: RCCRoute,
+    decision: Decision,
+    wound: WoundPackage | None,
+    policy: Policy | None = None,
+    *,
+    adapter_mode: str = "observe_only",
+) -> str:
     lock_lines = [f"  [{'PASS' if ok else 'OPEN'}] {name}" for name, ok in rehydration.locks.items()]
     wound_line = wound.wound_id if wound else "none"
     policy_name = policy.name if policy else decision.policy_name
@@ -20,6 +28,7 @@ def render(rehydration: RehydrationReport, route: RCCRoute, decision: Decision, 
         "| STATE                                                                |",
         f"|  Rehydration:    {'PASS' if rehydration.ok else 'FAIL'}",
         f"|  RCC Surface:    {route.target_surface}",
+        f"|  Adapter Mode:   {adapter_mode}",
         f"|  Claim Mode:     bounded",
         "+======================================================================+",
         "| ACTIVE POLICY                                                        |",

@@ -1,0 +1,18 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.1",
+  "version": "v0.3",
+  "test_result": "Ran 61 tests OK",
+  "new_controls": [
+    "adapter_event_model",
+    "adapter_enforcement_report",
+    "dry_run_mutation_simulator",
+    "filesystem_adapter_dry_run",
+    "github_adapter_dry_run",
+    "agent_adapter_dry_run",
+    "adapter_mode_enforcement"
+  ],
+  "non_claim_lock": "ASF-R v0.3 proves adapter dry-run enforcement only. No live mutation, no live self-healing, and no production authorization are enabled.",
+  "dry_run_law": "Dry-run may reveal the shape of a repair or mutation. Dry-run may not perform it.",
+  "next_version": "v0.4 Controlled Enforcement Gate",
+  "release_claim_ceiling": "residual_stratified"
+}

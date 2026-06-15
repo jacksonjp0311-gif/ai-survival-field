@@ -111,9 +111,9 @@ class EvidenceSealTests(unittest.TestCase):
         safety = AdapterSafety(mode="enforce_full", self_authorized=False, human_authorized=False)
         self.assertFalse(safety.can_mutate())
 
-    def test_adapter_enforce_full_can_mutate_when_scoped(self):
+    def test_adapter_enforce_full_forbidden_before_release_gate(self):
         safety = AdapterSafety(mode="enforce_full", self_authorized=False, human_authorized=True)
-        self.assertTrue(safety.can_mutate())
+        self.assertFalse(safety.can_mutate())
 
     def test_doctor_passes_clean_repo(self):
         result = run_doctor(ROOT)
@@ -149,4 +149,3 @@ class EvidenceSealTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

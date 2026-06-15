@@ -1,0 +1,9 @@
+{
+  "schema": "ASF-GOLDEN-TRACE-v0.1",
+  "trace_id": "filesystem_write_blocked",
+  "event": "examples/adapter_events/filesystem_write_blocked.json",
+  "expected_adapter_mode": "dry_run",
+  "expected_mutation_performed": false,
+  "expected_enforcement_result": "blocked",
+  "non_claim_lock": "Dry-run trace proves simulated enforcement only."
+}

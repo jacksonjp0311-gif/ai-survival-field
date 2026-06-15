@@ -17,6 +17,8 @@ class AdapterSafety:
     policy_signature_present: bool = False
 
     def can_mutate(self) -> bool:
+        if self.mode == "enforce_full":
+            return False
         if self.mode != "enforce_full":
             return False
         if self.self_authorized or not self.policy_loaded or not self.human_authorized:
@@ -37,4 +39,3 @@ class AdapterSafety:
             "policy_signature_present": self.policy_signature_present,
             "non_claim_lock": "Adapter safety status is not permission to mutate unless can_mutate is true and decision is pass.",
         }
-

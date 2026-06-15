@@ -28,6 +28,11 @@ INVARIANTS = [
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-008", "No adapter may self-authorize.", ["adapter"], "block", "require external authorization"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-009", "No UI may display pass if decision is blocked.", ["ui", "decision"], "block", "repair UI decision binding"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-010", "No README claim may exceed evidence state.", ["docs", "release"], "block", "downgrade README claim or add evidence"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-011", "Dry-run must not mutate state.", ["adapter", "dry_run"], "block", "preserve simulation only"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-012", "Adapter event hash must bind to enforcement report.", ["adapter", "report"], "block", "rebuild report from event"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-013", "Enforcement report must bind to decision hash.", ["adapter", "decision"], "block", "bind report to current decision"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-014", "Live enforcement is forbidden before explicit release gate.", ["adapter", "release"], "block", "use dry-run only"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-015", "Dry-run success is not production permission.", ["adapter", "operator"], "block", "require controlled enforcement gate"),
 ]
 
 
@@ -41,4 +46,3 @@ def registry() -> dict[str, Any]:
 
 def assert_unknown_not_pass(status: str | None) -> bool:
     return bool(status) and status != "unknown"
-

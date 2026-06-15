@@ -1,0 +1,18 @@
+{
+  "schema": "ASF-ADAPTER-EVENT-v0.1",
+  "adapter_name": "filesystem",
+  "adapter_mode": "dry_run",
+  "observed_action": "patch_repository",
+  "source_surface": "filesystem",
+  "target_surface": "repository",
+  "artifact_reference": "examples/artifacts/release_blocked_missing_tests.json",
+  "proposed_mutation": {
+    "operation": "write_file",
+    "path": "README.md",
+    "content_preview": "proposed update"
+  },
+  "actor": "operator",
+  "timestamp": "2026-06-14T00:00:00+00:00",
+  "environment": "development",
+  "metadata": {}
+}

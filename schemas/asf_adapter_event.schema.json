@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Adapter Event v0.1",
+  "type": "object",
+  "required": ["schema", "adapter_name", "adapter_mode", "observed_action", "source_surface", "target_surface", "artifact_reference", "proposed_mutation", "actor", "environment"]
+}

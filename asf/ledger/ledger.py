@@ -23,6 +23,7 @@ class LedgerRecord:
     timestamp: str
     reason_codes: list[str]
     wound_id: str | None
+    adapter_event_hash: str
     non_claim_lock: str
     record_hash: str
 
@@ -38,6 +39,7 @@ def build_record(
     wound: WoundPackage | None,
     *,
     actor: str = "operator",
+    adapter_event_hash: str = "",
 ) -> LedgerRecord:
     data = {
         "artifact_id": decision.artifact_id,
@@ -49,6 +51,7 @@ def build_record(
         "timestamp": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "reason_codes": decision.reason_codes,
         "wound_id": wound.wound_id if wound else None,
+        "adapter_event_hash": adapter_event_hash,
         "non_claim_lock": "Ledger records provenance only. It grants no action authority and does not prove truth.",
     }
     return LedgerRecord(schema="ASF-LEDGER-RECORD-v0.1", record_hash=stable_hash(data), **data)

@@ -26,6 +26,8 @@ def run_loop(
     root: str | Path = ".",
     capability_token: CapabilityToken | None = None,
     authorization_receipt: AuthorizationReceipt | None = None,
+    adapter_mode: str = "observe_only",
+    adapter_event_hash: str = "",
 ) -> dict[str, Any]:
     artifact = ASFArtifact.load(artifact_path)
     policy = load_policy(policy_path)
@@ -45,12 +47,14 @@ def run_loop(
             decision = authorization_failed_decision(artifact, action, policy, decision.permission_ceiling)
     wound = from_decision(decision)
     policy_data = json.loads(Path(policy_path).read_text(encoding="utf-8"))
-    ledger = build_record(decision, policy_data, rhp_report, route, wound)
+    ledger = build_record(decision, policy_data, rhp_report, route, wound, adapter_event_hash=adapter_event_hash)
     return {
         "rehydration": rhp_report.as_dict(),
         "route": route.as_dict(),
         "decision": decision.as_dict(),
         "wound": wound.as_dict() if wound else None,
         "ledger": ledger.as_dict(),
-        "ui": render(rhp_report, route, decision, wound, policy),
+        "adapter_mode": adapter_mode,
+        "adapter_event_hash": adapter_event_hash,
+        "ui": render(rhp_report, route, decision, wound, policy, adapter_mode=adapter_mode),
     }

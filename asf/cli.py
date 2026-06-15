@@ -4,6 +4,9 @@ import argparse
 import json
 from pathlib import Path
 
+from asf.adapters.dry_run import simulate
+from asf.adapters.event import AdapterEvent
+from asf.adapters.enforcement_report import report_invariant_ok
 from asf.core.governance_debt import registry as governance_debt_registry
 from asf.core.invariants import registry as invariant_registry
 from asf.core.policy import load_policy
@@ -26,6 +29,12 @@ def command_guard(args: argparse.Namespace) -> int:
 
 def command_loop_run(args: argparse.Namespace) -> int:
     result = run_loop(args.artifact, action=args.action, policy_path=args.policy, operator_authorized=args.authorized)
+    print_json(result)
+    return 0 if result["decision"]["status"] == "pass" else 2
+
+
+def command_loop_dry_run(args: argparse.Namespace) -> int:
+    result = run_loop(args.artifact, action=args.action, policy_path=args.policy, operator_authorized=args.authorized, adapter_mode="dry_run")
     print_json(result)
     return 0 if result["decision"]["status"] == "pass" else 2
 
@@ -79,6 +88,33 @@ def command_policy_diff(args: argparse.Namespace) -> int:
     return 0
 
 
+def _load_event(path: str) -> AdapterEvent:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    return AdapterEvent.from_dict(data)
+
+
+def command_adapter_observe(args: argparse.Namespace) -> int:
+    event = _load_event(args.event)
+    print_json(event.as_dict())
+    return 0
+
+
+def command_adapter_dry_run(args: argparse.Namespace) -> int:
+    event = _load_event(args.event)
+    report = simulate(event, policy_path=args.policy, root=args.root)
+    print_json(report.as_dict())
+    return 0 if report_invariant_ok(report.as_dict()) else 2
+
+
+def command_adapter_report(args: argparse.Namespace) -> int:
+    path = Path(args.report_id)
+    if path.is_file():
+        print(path.read_text(encoding="utf-8"))
+        return 0
+    print_json({"report_id": args.report_id, "found": False, "non_claim_lock": "Report lookup is read-only and grants no authority."})
+    return 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="AI Survival Field Runtime")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -98,6 +134,13 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--policy", default="policies/default.yaml")
     run.add_argument("--authorized", action="store_true", default=True)
     run.set_defaults(func=command_loop_run)
+
+    dry_run = loop_sub.add_parser("dry-run")
+    dry_run.add_argument("artifact")
+    dry_run.add_argument("--action", required=True)
+    dry_run.add_argument("--policy", default="policies/default.yaml")
+    dry_run.add_argument("--authorized", action="store_true", default=True)
+    dry_run.set_defaults(func=command_loop_dry_run)
 
     ui = sub.add_parser("ui")
     ui.add_argument("artifact")
@@ -137,6 +180,20 @@ def build_parser() -> argparse.ArgumentParser:
     diff.add_argument("old_policy")
     diff.add_argument("new_policy")
     diff.set_defaults(func=command_policy_diff)
+
+    adapter = sub.add_parser("adapter")
+    adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)
+    observe = adapter_sub.add_parser("observe")
+    observe.add_argument("event")
+    observe.set_defaults(func=command_adapter_observe)
+    dry = adapter_sub.add_parser("dry-run")
+    dry.add_argument("event")
+    dry.add_argument("--policy", default="policies/default.yaml")
+    dry.add_argument("--root", default=".")
+    dry.set_defaults(func=command_adapter_dry_run)
+    report = adapter_sub.add_parser("report")
+    report.add_argument("report_id")
+    report.set_defaults(func=command_adapter_report)
     return parser
 
 

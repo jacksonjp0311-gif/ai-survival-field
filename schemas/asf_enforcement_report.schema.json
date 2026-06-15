@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Enforcement Report v0.1",
+  "type": "object",
+  "required": ["schema", "report_id", "event_hash", "decision_hash", "policy_hash", "route_hash", "rehydration_hash", "adapter_mode", "enforcement_result", "mutation_performed", "simulated_effect", "ledger_record_hash", "non_claim_lock"]
+}
