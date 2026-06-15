@@ -36,11 +36,11 @@ class CurrentHeadCISealTests(unittest.TestCase):
 
 class V10PackagingTests(unittest.TestCase):
     def test_package_version_is_release_candidate(self):
-        self.assertEqual(asf.__version__, "1.1.0.dev2")
+        self.assertEqual(asf.__version__, "1.1.0.dev3")
 
     def test_pyproject_exposes_asf_console_script(self):
         pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-        self.assertIn('version = "1.1.0.dev2"', pyproject)
+        self.assertIn('version = "1.1.0.dev3"', pyproject)
         self.assertIn('asf = "asf.cli:main"', pyproject)
 
     def test_readme_has_ci_badge(self):
@@ -53,8 +53,8 @@ class V10PackagingTests(unittest.TestCase):
 
     def test_latest_pointer_identifies_v1_final(self):
         pointer = json.loads((ROOT / "docs" / "context" / "latest-asf.json").read_text(encoding="utf-8"))
-        self.assertEqual(pointer["latest_version"], "ASF-R v1.1.0-dev2")
-        self.assertEqual(pointer["current_state"], "TRIADIC_GEOMETRY_CONSOLE_SCREENSHOT_EVIDENCE")
+        self.assertEqual(pointer["latest_version"], "ASF-R v1.1.0-dev3")
+        self.assertEqual(pointer["current_state"], "TRIADIC_GEOMETRY_CONSOLE_ALIGNMENT_AND_SCROLLBAR_POLISH")
 
     def test_install_doc_exists(self):
         text = (ROOT / "docs" / "install.md").read_text(encoding="utf-8")
@@ -151,7 +151,7 @@ class V10PackagingTests(unittest.TestCase):
 
     def test_workflow_ci_evidence_uses_release_candidate_test_count(self):
         workflow = (ROOT / ".github" / "workflows" / "asf-guard.yml").read_text(encoding="utf-8")
-        self.assertIn("--test-count 284", workflow)
+        self.assertIn("--test-count 296", workflow)
 
 
 if __name__ == "__main__":

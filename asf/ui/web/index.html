@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="top-badges">
-          <div class="badge">READ-ONLY OBSERVE</div>
+          <div class="badge observe-badge">READ-ONLY OBSERVE</div>
           <div class="badge stacked"><small>LOCAL RUNTIME</small><strong><i></i>127.0.0.1</strong></div>
           <div class="badge stacked"><small>FOLLOW MODE</small><strong><i></i>ON</strong></div>
           <div class="shield">⌘</div>
@@ -64,7 +64,7 @@
             </div>
             <div class="command-label">COMMAND (READ-ONLY)</div>
             <code id="command-line">$ python -m asf.cli full-loop run --geometry</code>
-            <div id="cli-stream" class="stream"></div>
+            <div id="cli-stream" class="stream cli-stream"></div>
             <div class="metric-row">
               <div><small>Current Phase</small><strong id="metric-phase">loading</strong></div>
               <div><small>Exit Code</small><strong id="metric-exit">none</strong></div>
@@ -78,7 +78,7 @@
               <h2>Wound Package</h2>
               <span id="wound-gate">NO ACTIVE WOUND</span>
             </div>
-            <div id="wound-fields" class="wound-fields"></div>
+            <div id="wound-fields" class="wound-fields wound-body"></div>
           </section>
         </aside>
       </main>

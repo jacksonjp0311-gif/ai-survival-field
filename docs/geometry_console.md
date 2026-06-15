@@ -7,7 +7,9 @@ It is not a control panel.
 
 v1.1.0-dev1 evolves the surface toward the product-grade target.
 
-v1.1.0-dev2 adds screenshot evidence and a README-visible operator surface:
+v1.1.0-dev3 refines the screenshot-backed operator surface with darker palette tuning,
+custom scrollbars, cleaner footer rhythm, geometry label alignment, and right-column
+overflow polish:
 
 - top header badges,
 - left gate legend,

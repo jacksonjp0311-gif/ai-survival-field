@@ -48,7 +48,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v1.1.0-dev2 geometry console screenshot evidence and README surface.
+ASF-R v1.1.0-dev3 triadic geometry console alignment, scrollbar, and visual polish.
 ```
 
 The latest stable release tag remains `v1.0.0`. The `main` branch now carries

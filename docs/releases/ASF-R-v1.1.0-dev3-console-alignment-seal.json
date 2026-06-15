@@ -1,0 +1,28 @@
+{
+  "schema": "ASF-OBSERVABILITY-SEAL-v1.1.0-dev3",
+  "version": "ASF-R v1.1.0-dev3",
+  "implementation_commit": "pending_until_commit",
+  "capability": "triadic_geometry_console_alignment_scrollbar_and_visual_polish",
+  "package_version": "1.1.0.dev3",
+  "test_count_minimum": 296,
+  "test_result": "local_pass",
+  "authority_expansion": false,
+  "mutation_enabled": "unchanged_from_v1_0_0",
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "ui_mode": "read_only_observe",
+  "gate_count": 25,
+  "status_card_count": 12,
+  "screenshot_path": "docs/assets/asf-r-triadic-geometry-console.png",
+  "polish_targets": [
+    "darker_palette",
+    "controlled_glow",
+    "custom_scrollbars",
+    "right_column_overflow",
+    "geometry_label_alignment",
+    "footer_card_rhythm",
+    "failed_gate_wound_connector"
+  ],
+  "proof": "ASF-R v1.1.0-dev3 aligns and polishes the product-grade Triadic Geometry Console by refining layout, dark theme balance, label placement, overflow behavior, and scrollbar styling without adding authorization, repair authority, wound closure, policy mutation, memory mutation, enforce_full, or general authority.",
+  "non_claim_lock": "The Triadic Geometry Console observes and illuminates the governed loop only. It does not prove truth, make AI safe, provide formal verification, provide production security, authorize autonomous action, or grant repair authority."
+}

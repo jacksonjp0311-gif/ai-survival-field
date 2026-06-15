@@ -48,12 +48,40 @@ LEGEND = {
 KNOWN_STATUSES = {"pass", "blocked", "fail", "pending", "read_only", "inactive", "forbidden"}
 
 GATE_COORDINATES = [
-    (310, 150), (260, 195), (225, 250), (200, 310), (190, 375),
-    (205, 440), (245, 500), (300, 548), (365, 580), (435, 590),
-    (505, 578), (575, 555), (640, 525), (700, 485), (755, 435),
-    (800, 378), (825, 315), (820, 250), (785, 192), (735, 148),
-    (675, 118), (610, 98), (545, 88), (480, 92), (415, 112),
+    (334, 145), (286, 184), (252, 234), (230, 292), (222, 354),
+    (236, 416), (270, 474), (320, 522), (382, 554), (450, 570),
+    (520, 568), (590, 548), (654, 514), (710, 468), (754, 414),
+    (786, 354), (800, 292), (792, 230), (762, 174), (714, 132),
+    (652, 104), (586, 92), (520, 96), (456, 104), (394, 122),
 ]
+
+LABEL_OVERRIDES = {
+    1: (268, 142),
+    2: (218, 182),
+    3: (188, 234),
+    4: (162, 292),
+    5: (154, 354),
+    6: (168, 416),
+    7: (200, 474),
+    8: (252, 522),
+    9: (350, 592),
+    10: (450, 612),
+    11: (520, 610),
+    12: (590, 590),
+    13: (666, 552),
+    14: (782, 468),
+    15: (830, 414),
+    16: (862, 354),
+    17: (872, 292),
+    18: (866, 230),
+    19: (832, 174),
+    20: (778, 132),
+    21: (710, 86),
+    22: (630, 78),
+    23: (520, 132),
+    24: (410, 78),
+    25: (330, 96),
+}
 
 VERTICES = {
     "evidence": "Evidence / Rehydration",
@@ -146,7 +174,7 @@ def map_gates(root: Path, pointer: dict[str, Any], seal: dict[str, Any], summary
         else:
             status = "inactive"
         x, y = GATE_COORDINATES[gate_id - 1]
-        label_x, label_y = label_coordinates(x, y)
+        label_x, label_y = LABEL_OVERRIDES.get(gate_id, label_coordinates(x, y))
         gates.append(GeometryGate(
             gate_id,
             label,
@@ -210,8 +238,8 @@ def label_coordinates(x: int, y: int) -> tuple[int, int]:
     center_x, center_y = 520, 360
     dx = x - center_x
     dy = y - center_y
-    offset_x = 76 if dx >= 0 else -76
-    offset_y = 18 if abs(dx) > 120 else (-38 if dy < 0 else 42)
+    offset_x = 88 if dx >= 0 else -88
+    offset_y = 18 if abs(dx) > 130 else (-44 if dy < 0 else 46)
     return x + offset_x, y + offset_y
 
 
