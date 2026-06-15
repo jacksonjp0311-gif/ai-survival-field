@@ -1,0 +1,7 @@
+{
+  "schema": "ASF-HERMES-LESSON-v0.1",
+  "lesson": "unknown_ci_is_not_pass",
+  "test_status": "unknown",
+  "blocked": ["release", "promotion", "wound_closure", "live_enforcement"],
+  "permitted": ["diagnostic", "documentation_only", "adapter_dry_run", "governance_kernel_update"]
+}

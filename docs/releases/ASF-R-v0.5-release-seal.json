@@ -1,0 +1,15 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.5",
+  "version": "ASF-R v0.5",
+  "capability": "repair_planner_dry_run",
+  "test_count_minimum": 100,
+  "test_result": "Ran 115 tests OK",
+  "mutation_enabled": false,
+  "repair_performed": false,
+  "wound_closure_enabled": false,
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "proof": "wound packages can be converted into bounded repair plans and dry-run validation reports without mutation",
+  "next_operation": "ASF-R v0.6 Repair Validation Replay",
+  "non_claim_lock": "ASF-R v0.5 plans and validates repair paths only. It does not perform repairs, close wounds, grant authority, or enable self-healing mutation."
+}

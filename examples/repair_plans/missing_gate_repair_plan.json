@@ -1,0 +1,19 @@
+{
+  "schema": "ASF-REPAIR-PLAN-v0.1",
+  "repair_plan_id": "ASF-REPAIR-example",
+  "wound_id": "ASF-WOUND-fde7366bae78",
+  "repair_class": "missing_gate_evidence",
+  "source_decision_hash": "a38c4883dfb71c967817003fb1f69b6683497f509e3928326d8d44ccc0cc48e1",
+  "source_policy_hash": "c223a3b86c9844bc9736eda51810e23f27a24bc47d672b1c696ba46f5905f202",
+  "source_ledger_hash": "07baabfa56bc77c129399d64122ff2718bdaf20e8bf374635bac86af5d4fd1bb",
+  "proposed_actions": ["inspect_wound", "collect_required_evidence", "rerun_guard", "emit_new_ledger_record", "request_authorization_for_closure", "name_required_evidence:test report"],
+  "mutation_mode": "dry_run",
+  "requires_authorization": true,
+  "forbidden_actions": ["perform_mutation", "close_wound_without_evidence", "grant_self_authority", "enable_enforce_full"],
+  "expected_outputs": ["repair_dry_run_report", "repair_validation_report", "authorization_request"],
+  "repair_performed": false,
+  "wound_closed": false,
+  "authority_granted": false,
+  "enforce_full_enabled": false,
+  "non_claim_lock": "A repair plan is not a repair. It is a bounded proposal."
+}

@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Latest Pointer","type":"object","required":["schema","latest_version","latest_release_seal","remote_url","test_count","current_state","next_operation","non_claim_lock"]}

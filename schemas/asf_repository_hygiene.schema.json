@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Repository Hygiene","type":"object","required":["schema","ok","warning_limit_bytes","hard_limit_bytes","warnings","errors","non_claim_lock"]}

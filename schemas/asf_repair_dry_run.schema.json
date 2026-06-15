@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Repair Dry Run","type":"object","required":["schema","repair_plan_hash","mutation_performed","repair_performed","wound_closed","non_claim_lock"]}

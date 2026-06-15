@@ -1,0 +1,6 @@
+{
+  "schema": "ASF-HERMES-LESSON-v0.1",
+  "lesson": "repository_file_size_hygiene",
+  "warning_limit_bytes": 10000000,
+  "hard_limit_bytes": 95000000
+}

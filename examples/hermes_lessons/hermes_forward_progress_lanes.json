@@ -1,0 +1,6 @@
+{
+  "schema": "ASF-HERMES-LESSON-v0.1",
+  "lesson": "forward_progress_under_unresolved_state",
+  "allowed": ["documentation", "observability", "repair_planner_dry_run"],
+  "blocked": ["wound_closure", "production_release", "self_healing_mutation"]
+}

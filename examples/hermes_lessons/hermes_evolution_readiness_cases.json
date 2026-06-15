@@ -1,0 +1,8 @@
+{
+  "schema": "ASF-HERMES-LESSON-v0.1",
+  "lesson": "evolution_readiness_cases",
+  "cases": [
+    {"operation": "repair_planner_dry_run", "expected": "permitted"},
+    {"operation": "release", "expected": "blocked_when_unknown"}
+  ]
+}

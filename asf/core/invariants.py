@@ -38,6 +38,16 @@ INVARIANTS = [
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-018", "Blocking evidence does not close the wound.", ["ledger", "wound"], "block", "require closure evidence"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-019", "enforce_full remains forbidden before production release gate.", ["adapter", "release"], "block", "stay in block-only mode"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-020", "Workflow failure caused by ASF-R must emit an enforcement report.", ["workflow", "adapter"], "block", "write or return enforcement report"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-021", "A repair plan is not a repair.", ["repair"], "block", "preserve proposal boundary"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-022", "Repair dry-run must not mutate state.", ["repair", "dry_run"], "block", "simulate only"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-023", "Repair validation must not close wounds.", ["repair", "validation"], "block", "require closure evidence"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-024", "Repair requires source wound identity.", ["repair", "wound"], "block", "bind repair to wound"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-025", "Repair requires source decision hash.", ["repair", "decision"], "block", "bind repair to decision"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-026", "Repair cannot grant authority.", ["repair", "authorization"], "block", "request external authorization"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-027", "Repair cannot enable enforce_full.", ["repair", "adapter"], "block", "keep enforce_full forbidden"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-028", "Repair cannot bypass policy.", ["repair", "policy"], "block", "preserve or diff policy hash"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-029", "Repair cannot bypass authorization receipt.", ["repair", "authorization"], "block", "require receipt"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-030", "Self-healing mutation remains forbidden.", ["repair", "self_healing"], "block", "stay in dry-run planning"),
 ]
 
 

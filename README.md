@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.4 controlled block enforcement: experimental production line.
+ASF-R v0.5 repair planner dry run: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -84,6 +84,9 @@ enforcement without mutating state.
 
 ASF-R v0.4 proves that controlled workflows can fail closed when blocked while
 still performing no mutation.
+
+ASF-R v0.5 proves that wounds can become bounded repair plans, repair dry-runs,
+validation reports, and authorization requests without performing repair.
 
 ## What This Version Does Not Claim
 
@@ -186,6 +189,24 @@ Run adapter block-only enforcement:
 python -m asf.cli adapter enforce-block-only examples/adapter_events/filesystem_write_blocked.json
 ```
 
+Create a repair plan from a wound:
+
+```powershell
+python -m asf.cli repair plan examples/wounds/missing_gate_wound.json
+```
+
+Dry-run a repair plan:
+
+```powershell
+python -m asf.cli repair dry-run examples/repair_plans/missing_gate_repair_plan.json
+```
+
+Validate a repair plan:
+
+```powershell
+python -m asf.cli repair validate examples/repair_plans/missing_gate_repair_plan.json
+```
+
 ## Runtime Geometry
 
 ```text
@@ -224,7 +245,10 @@ ai-survival-field/
   policies/
   examples/
     adapter_events/
+    hermes_lessons/
+    repair_plans/
     traces/
+    wounds/
   docs/
     architecture.md
     adapter_dry_run.md
@@ -234,7 +258,9 @@ ai-survival-field/
     capability_tokens.md
     controlled_enforcement_gate.md
     decision_replay.md
+    evolution_readiness_gate.md
     enforce_block_only.md
+    forward_progress_governor.md
     governance_debt.md
     github_actions_guard.md
     invariant_registry.md
@@ -243,6 +269,10 @@ ai-survival-field/
     origin_statement.md
     production_maturity.md
     rehydration_findings.md
+    repository_hygiene.md
+    repair_dry_run_boundary.md
+    repair_planner.md
+    repair_validation.md
     runtime_alignment_auditor.md
     self_healing_horizon.md
     v0.3_dry_run_boundary.md
@@ -353,6 +383,38 @@ The system may not perform a mutation.
 v0.4 does not enable `enforce_full`, live mutation, live repair, self-healing
 mutation, repository writes, release creation, or memory promotion. The next
 operation is `ASF-R v0.5 Repair Planner Dry Run`.
+
+## v0.5 Repair Planner Dry Run
+
+v0.5 converts wound packages into bounded repair plans and validates repair paths
+without applying them.
+
+It adds:
+
+- Hermes lesson primitives,
+- evolution readiness gate,
+- forward progress governor,
+- runtime geometry contract,
+- repository hygiene guard,
+- zero-context latest pointer,
+- repair planner,
+- repair dry-run,
+- repair validation,
+- repair report,
+- v0.5 release seal.
+
+Core v0.5 law:
+
+```text
+ASF-R may plan repair.
+ASF-R may dry-run repair.
+ASF-R may validate a proposed repair.
+ASF-R may not perform or authorize repair.
+```
+
+v0.5 does not enable live mutation, repair execution, wound closure,
+self-healing mutation, or `enforce_full`. The next operation is `ASF-R v0.6
+Repair Validation Replay`.
 
 ## Non-Claim Lock
 

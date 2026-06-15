@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Repair Validation","type":"object","required":["schema","valid","failures","wound_closed","mutation_performed","non_claim_lock"]}

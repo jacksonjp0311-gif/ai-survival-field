@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Repair Report","type":"object","required":["schema","repair_report_id","repair_plan_hash","validation_status","mutation_performed","repair_performed","wound_closed","non_claim_lock"]}

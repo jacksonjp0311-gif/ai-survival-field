@@ -1,0 +1,14 @@
+{
+  "schema": "ASF-WOUND-v0.1",
+  "wound_id": "ASF-WOUND-fde7366bae78",
+  "wound_class": "missing_gate_failed",
+  "subject_artifact": "release-blocked-missing-tests",
+  "intended_action": "release",
+  "blocked_reason": "ASF005_MISSING_GATE",
+  "permission_ceiling": "residual_stratified",
+  "blocked_actions": ["autonomous_action", "commit", "mark_canonical", "release", "update_memory"],
+  "permitted_actions": ["draft", "propose", "request_evidence"],
+  "required_evidence": ["test report"],
+  "next_admissible_action": "acquire required evidence",
+  "non_claim_lock": "A wound package is not proof of failure in the world. It proves propagation is not yet permitted."
+}

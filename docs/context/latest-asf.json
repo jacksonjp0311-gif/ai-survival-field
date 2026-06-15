@@ -1,0 +1,16 @@
+{
+  "schema": "ASF-LATEST-POINTER-v0.1",
+  "latest_version": "ASF-R v0.5",
+  "latest_commit": "pending",
+  "latest_release_seal": "docs/releases/ASF-R-v0.5-release-seal.json",
+  "remote_url": "https://github.com/jacksonjp0311-gif/ai-survival-field",
+  "test_count": 115,
+  "current_state": "REPAIR_PLANNER_DRY_RUN",
+  "active_adapter_modes": ["observe_only", "dry_run", "enforce_block_only"],
+  "forbidden_modes": ["enforce_full"],
+  "mutation_enabled": false,
+  "repair_enabled": false,
+  "self_healing_mutation_enabled": false,
+  "next_operation": "ASF-R v0.6 Repair Validation Replay",
+  "non_claim_lock": "Latest pointer rehydrates state only. It does not grant authority."
+}

@@ -14,6 +14,11 @@ from asf.core.policy import load_policy
 from asf.core.policy_diff import diff_policies
 from asf.ledger.ledger import verify_record
 from asf.ledger.replay import replay_decision
+from asf.repair.repair_dry_run import dry_run as repair_dry_run
+from asf.repair.repair_plan import RepairPlan
+from asf.repair.repair_planner import plan_from_wound
+from asf.repair.repair_report import build_report as build_repair_report
+from asf.repair.repair_validation import validate_plan
 from asf.runtime import run_loop
 from asf.ui.doctor import run_doctor
 
@@ -121,6 +126,43 @@ def command_enforce_block_only(args: argparse.Namespace) -> int:
     return result.exit_code
 
 
+def _load_json(path: str) -> dict:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def command_repair_plan(args: argparse.Namespace) -> int:
+    wound = _load_json(args.wound)
+    plan = plan_from_wound(
+        wound,
+        source_decision_hash=args.source_decision_hash,
+        source_policy_hash=args.source_policy_hash,
+        source_ledger_hash=args.source_ledger_hash,
+    )
+    print_json(plan.as_dict())
+    return 0
+
+
+def command_repair_dry_run(args: argparse.Namespace) -> int:
+    plan = RepairPlan.from_dict(_load_json(args.repair_plan))
+    print_json(repair_dry_run(plan).as_dict())
+    return 0
+
+
+def command_repair_validate(args: argparse.Namespace) -> int:
+    plan = RepairPlan.from_dict(_load_json(args.repair_plan))
+    validation = validate_plan(plan)
+    print_json(validation.as_dict())
+    return 0 if validation.valid else 2
+
+
+def command_repair_report(args: argparse.Namespace) -> int:
+    plan = RepairPlan.from_dict(_load_json(args.repair_plan))
+    dry = repair_dry_run(plan)
+    validation = validate_plan(plan)
+    print_json(build_repair_report(plan, dry, validation).as_dict())
+    return 0 if validation.valid else 2
+
+
 def command_adapter_report(args: argparse.Namespace) -> int:
     path = Path(args.report_id)
     if path.is_file():
@@ -204,6 +246,24 @@ def build_parser() -> argparse.ArgumentParser:
     block_only.add_argument("--policy", default="policies/default.yaml")
     block_only.add_argument("--root", default=".")
     block_only.set_defaults(func=command_enforce_block_only)
+
+    repair = sub.add_parser("repair")
+    repair_sub = repair.add_subparsers(dest="repair_command", required=True)
+    repair_plan = repair_sub.add_parser("plan")
+    repair_plan.add_argument("wound")
+    repair_plan.add_argument("--source-decision-hash", default="source-decision-hash-required")
+    repair_plan.add_argument("--source-policy-hash", default="source-policy-hash-required")
+    repair_plan.add_argument("--source-ledger-hash", default="")
+    repair_plan.set_defaults(func=command_repair_plan)
+    repair_dry = repair_sub.add_parser("dry-run")
+    repair_dry.add_argument("repair_plan")
+    repair_dry.set_defaults(func=command_repair_dry_run)
+    repair_validate = repair_sub.add_parser("validate")
+    repair_validate.add_argument("repair_plan")
+    repair_validate.set_defaults(func=command_repair_validate)
+    repair_report = repair_sub.add_parser("report")
+    repair_report.add_argument("repair_plan")
+    repair_report.set_defaults(func=command_repair_report)
 
     adapter = sub.add_parser("adapter")
     adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)

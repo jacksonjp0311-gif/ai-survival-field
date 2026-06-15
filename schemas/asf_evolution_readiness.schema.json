@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Evolution Readiness","type":"object","required":["schema","requested_operation","ready","blocked_reasons","non_claim_lock"]}
