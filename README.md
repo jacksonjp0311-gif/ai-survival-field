@@ -48,8 +48,11 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v1.0.0 bounded governed release.
+ASF-R v1.1.0-dev0 triadic geometry console observability hardening.
 ```
+
+The latest stable release tag remains `v1.0.0`. The `main` branch now carries
+post-v1 read-only observability work for the Triadic Geometry Console.
 
 This repository is the production-oriented successor line to Survivor Field
 Theory v1.4. The SFT repository remains the clean reference theory and
@@ -167,6 +170,42 @@ Render the operator UI:
 
 ```powershell
 python -m asf.cli ui examples/artifacts/release_blocked_missing_tests.json --action release
+```
+
+Render the triadic geometry state:
+
+```powershell
+python -m asf.cli geometry state
+```
+
+Serve the read-only triadic geometry console:
+
+```powershell
+python -m asf.cli geometry serve
+```
+
+Run the full local governed loop:
+
+```powershell
+.\scripts\run-asf-full-loop.ps1
+```
+
+Run the full local governed loop with geometry flag:
+
+```powershell
+.\scripts\run-asf-full-loop.ps1 -Geometry
+```
+
+Bash:
+
+```bash
+./scripts/run-asf-full-loop.sh
+```
+
+Bash with geometry flag:
+
+```bash
+./scripts/run-asf-full-loop.sh --geometry
 ```
 
 Run the public demo:
@@ -333,6 +372,7 @@ ai-survival-field/
     forward_progress_governor.md
     governance_debt.md
     github_actions_guard.md
+    geometry_console.md
     install.md
     invariant_registry.md
     non_claim_lock.md
@@ -353,6 +393,110 @@ ai-survival-field/
     v0.3_dry_run_boundary.md
     releases/
   tests/
+```
+
+## ASF-R Triadic Geometry Console
+
+ASF-R includes a read-only geometry console for observing the governed runtime
+loop while it runs.
+
+The console is not a control panel.
+
+It is a local read-only observability surface that opens with the full loop,
+follows runtime state, lights every gate in the runtime path, and surfaces
+wound/failure packages when propagation is blocked.
+
+```text
+The geometry shows the loop.
+The CLI shows the runtime trace.
+The wound package shows the consequence.
+```
+
+Read-only UI law:
+
+```text
+The UI may observe.
+The UI may illuminate.
+The UI may follow runtime state.
+The UI may render gates, wounds, evidence, and traces.
+The UI may not authorize repair.
+The UI may not execute mutation.
+The UI may not close wounds.
+The UI may not mutate policy.
+The UI may not write memory.
+The UI may not enable enforce_full.
+The UI may not grant authority.
+```
+
+Triadic geometry:
+
+```text
+Evidence / Rehydration
+Governance / Coherence
+Action / Recovery
+```
+
+Gate colors:
+
+```text
+Green = pass
+Red = blocked/fail
+Amber = active/pending
+Cyan = read-only evidence
+Gray = inactive
+Deep red lock = forbidden
+```
+
+Required gate labels:
+
+```text
+1. Latest Pointer Loaded
+2. Rehydration Passed
+3. Release Seal Loaded
+4. Repository Truth Aligned
+5. CI Evidence Loaded
+6. Ledger Verify
+7. Policy Loaded
+8. Invariants Loaded
+9. Claim Ceiling Assigned
+10. Artifact Validated
+11. Decision Computed
+12. Permission Checked
+13. Non-Claim Lock Preserved
+14. Block Enforcement Checked
+15. Wound Emitted
+16. Repair Plan Created
+17. Repair Dry-Run Passed
+18. Repair Validation Passed
+19. Repair Replay Passed
+20. Authorization Bound
+21. Bounded Repair Executed
+22. Post-Repair Evidence Captured
+23. Closure Request Created
+24. Closure Validation Passed
+25. Closure Record Written
+```
+
+Wound panel behavior:
+
+```text
+NO ACTIVE WOUND
+```
+
+When a gate fails or propagation is blocked, the panel glows red and shows wound
+ID, failed gate, failure class, decision, permission ceiling, blocked actions,
+permitted actions, repair path, repair status, and closure status.
+
+Geometry console non-claim lock:
+
+```text
+ASF-R Triadic Geometry Console does not prove truth.
+ASF-R Triadic Geometry Console does not make AI safe.
+ASF-R Triadic Geometry Console does not provide formal verification.
+ASF-R Triadic Geometry Console does not provide production security.
+ASF-R Triadic Geometry Console does not authorize autonomous action.
+ASF-R Triadic Geometry Console does not grant repair authority.
+ASF-R Triadic Geometry Console observes and illuminates the governed loop only.
 ```
 
 ## v0.1.1 Evidence Seal

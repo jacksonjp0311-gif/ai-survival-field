@@ -1,0 +1,81 @@
+:root {
+  --bg: #090d14;
+  --panel: #101827;
+  --green: #39ff88;
+  --red: #ff3355;
+  --amber: #ffd166;
+  --cyan: #4ddcff;
+  --gray: #6b7280;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: #e5f7ff;
+  font-family: Consolas, "Segoe UI", monospace;
+}
+
+header, footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(77, 220, 255, 0.45);
+  background: #0c1220;
+}
+
+h1, h2, p { margin: 0; }
+h1 { color: var(--cyan); font-size: 22px; }
+h2 { color: var(--cyan); font-size: 14px; margin-bottom: 8px; }
+
+main {
+  display: grid;
+  grid-template-columns: minmax(580px, 1fr) 380px;
+  min-height: calc(100vh - 120px);
+}
+
+#geometry { padding: 16px; }
+aside { padding: 16px; border-left: 1px solid rgba(77, 220, 255, 0.35); }
+
+.panel {
+  background: rgba(16, 24, 39, 0.86);
+  border: 1px solid rgba(77, 220, 255, 0.55);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 0 16px rgba(77, 220, 255, 0.16);
+}
+
+.wound.blocked {
+  border-color: var(--red);
+  box-shadow: 0 0 22px rgba(255, 51, 85, 0.55);
+}
+
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #dcefff;
+}
+
+.gate text { fill: #e5f7ff; font-size: 10px; text-anchor: middle; }
+.gate circle { fill: #0c1220; stroke-width: 3; }
+.pass circle { stroke: var(--green); filter: drop-shadow(0 0 7px var(--green)); }
+.blocked circle, .fail circle { stroke: var(--red); filter: drop-shadow(0 0 8px var(--red)); }
+.pending circle { stroke: var(--amber); filter: drop-shadow(0 0 7px var(--amber)); }
+.read_only circle { stroke: var(--cyan); filter: drop-shadow(0 0 7px var(--cyan)); }
+.inactive circle { stroke: var(--gray); opacity: 0.62; }
+.forbidden circle { stroke: #8b0018; filter: drop-shadow(0 0 9px #8b0018); }
+
+.edge { stroke: var(--cyan); stroke-width: 2.5; opacity: 0.8; fill: none; }
+.inner { stroke: var(--green); stroke-width: 1.5; opacity: 0.7; fill: none; }
+
+footer {
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid rgba(77, 220, 255, 0.45);
+  border-bottom: 0;
+  font-size: 12px;
+}

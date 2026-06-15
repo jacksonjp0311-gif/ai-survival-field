@@ -8,6 +8,7 @@ from asf.adapters.block_enforcer import enforce_block_only, event_for_artifact
 from asf.ci.evidence import build_ci_evidence, verify_ci_evidence
 from asf.demo import public_demo
 from asf.dogfood import run_dogfood
+from asf.full_loop import run_full_loop
 from asf.adapters.dry_run import simulate
 from asf.adapters.event import AdapterEvent
 from asf.adapters.enforcement_report import report_invariant_ok
@@ -27,6 +28,8 @@ from asf.repair.repair_replay import replay_repair
 from asf.repair.repair_validation import validate_plan
 from asf.runtime import run_loop
 from asf.ui.doctor import run_doctor
+from asf.ui.geometry.app import serve as serve_geometry_console
+from asf.ui.geometry.gate_mapper import build_geometry_state
 from asf.wounds.closure import WoundClosureRequest, build_closure_request, close_wound, validate_closure
 
 
@@ -249,6 +252,27 @@ def command_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_geometry_state(args: argparse.Namespace) -> int:
+    print_json(build_geometry_state(args.root).as_dict())
+    return 0
+
+
+def command_geometry_serve(args: argparse.Namespace) -> int:
+    serve_geometry_console(args.root, host=args.host, port=args.port)
+    return 0
+
+
+def command_full_loop_run(args: argparse.Namespace) -> int:
+    summary = run_full_loop(args.root, geometry=args.geometry)
+    print_json({
+        "run_id": summary["run_id"],
+        "summary_hash": summary["summary_hash"],
+        "summary_path": f".asf_loop_runs/{summary['run_id']}/summary.json",
+        "non_claim_lock": summary["non_claim_lock"],
+    })
+    return 0
+
+
 def command_adapter_report(args: argparse.Namespace) -> int:
     path = Path(args.report_id)
     if path.is_file():
@@ -409,6 +433,24 @@ def build_parser() -> argparse.ArgumentParser:
     demo = sub.add_parser("demo")
     demo.add_argument("--root", default=".")
     demo.set_defaults(func=command_demo)
+
+    geometry = sub.add_parser("geometry")
+    geometry_sub = geometry.add_subparsers(dest="geometry_command", required=True)
+    geometry_state = geometry_sub.add_parser("state")
+    geometry_state.add_argument("--root", default=".")
+    geometry_state.set_defaults(func=command_geometry_state)
+    geometry_serve = geometry_sub.add_parser("serve")
+    geometry_serve.add_argument("--root", default=".")
+    geometry_serve.add_argument("--host", default="127.0.0.1")
+    geometry_serve.add_argument("--port", type=int, default=8765)
+    geometry_serve.set_defaults(func=command_geometry_serve)
+
+    full_loop = sub.add_parser("full-loop")
+    full_loop_sub = full_loop.add_subparsers(dest="full_loop_command", required=True)
+    full_loop_run = full_loop_sub.add_parser("run")
+    full_loop_run.add_argument("--root", default=".")
+    full_loop_run.add_argument("--geometry", action="store_true")
+    full_loop_run.set_defaults(func=command_full_loop_run)
 
     adapter = sub.add_parser("adapter")
     adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)

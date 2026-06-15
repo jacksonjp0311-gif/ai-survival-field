@@ -1,0 +1,17 @@
+{
+  "schema": "ASF-TRIADIC-GATE-TRACE-v0.1",
+  "run_id": "ASF-RUN-sample",
+  "command": "python -m asf.cli dogfood run",
+  "phase": "decision / wound / repair",
+  "decision_status": "missing_gate_failed",
+  "permission_ceiling": "residual_stratified",
+  "failed_gates": [15],
+  "wound_package": {
+    "wound_id": "ASF-WOUND-fde7366bae78",
+    "wound_class": "missing_gate_failed",
+    "blocked_actions": ["release", "commit", "update_memory"],
+    "permitted_actions": ["draft", "propose", "request_evidence"],
+    "next_admissible_action": "acquire evidence"
+  },
+  "non_claim_lock": "Sample gate trace is illustrative. It grants no authority."
+}

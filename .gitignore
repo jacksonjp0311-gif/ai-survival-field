@@ -8,4 +8,4 @@ build/
 *.egg-info/
 .venv/
 reports/*.json
-
+.asf_loop_runs/

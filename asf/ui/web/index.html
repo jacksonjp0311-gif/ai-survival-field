@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ASF-R Triadic Geometry Console</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>ASF-R Triadic Geometry Console</h1>
+        <p>READ-ONLY OBSERVE</p>
+      </div>
+      <div id="legend"></div>
+    </header>
+    <main>
+      <section id="geometry">
+        <svg id="triad" viewBox="0 0 900 620" role="img" aria-label="ASF-R triadic gate geometry"></svg>
+      </section>
+      <aside>
+        <section class="panel">
+          <h2>Live CLI Run</h2>
+          <pre id="cli">loading...</pre>
+        </section>
+        <section class="panel wound">
+          <h2>Wound Package</h2>
+          <pre id="wound">loading...</pre>
+        </section>
+        <section class="panel">
+          <h2>Read-Only UI Law</h2>
+          <ul id="law"></ul>
+        </section>
+      </aside>
+    </main>
+    <footer id="status"></footer>
+    <script src="geometry.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
