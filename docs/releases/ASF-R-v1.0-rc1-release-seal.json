@@ -3,7 +3,7 @@
   "version": "ASF-R v1.0-rc1",
   "capability": "bounded_production_release_candidate",
   "package_version": "1.0.0rc1",
-  "implementation_commit": "pending_until_commit",
+  "implementation_commit": "29ac1c29a8d47ed144fb80b0be1b3a2f0682ffbe",
   "test_count_minimum": 230,
   "test_result": "Ran 230 tests OK locally",
   "remote_ci_required": true,
