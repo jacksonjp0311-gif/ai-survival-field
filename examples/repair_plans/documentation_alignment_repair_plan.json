@@ -1,0 +1,19 @@
+{
+  "schema": "ASF-REPAIR-PLAN-v0.1",
+  "repair_plan_id": "ASF-REPAIR-doc-alignment",
+  "wound_id": "ASF-WOUND-doc-alignment",
+  "repair_class": "documentation_alignment",
+  "source_decision_hash": "decision-hash",
+  "source_policy_hash": "policy-hash",
+  "source_ledger_hash": "ledger-hash",
+  "proposed_actions": ["inspect_wound", "apply_documentation_alignment", "emit_pre_post_evidence", "leave_wound_open"],
+  "mutation_mode": "dry_run",
+  "requires_authorization": true,
+  "forbidden_actions": ["perform_mutation", "close_wound_without_evidence", "grant_self_authority", "enable_enforce_full"],
+  "expected_outputs": ["bounded_repair_execution", "repair_evidence", "ledger_evidence"],
+  "repair_performed": false,
+  "wound_closed": false,
+  "authority_granted": false,
+  "enforce_full_enabled": false,
+  "non_claim_lock": "A repair plan is not a repair. It is a bounded proposal."
+}

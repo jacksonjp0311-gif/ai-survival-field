@@ -1,16 +1,16 @@
 {
   "schema": "ASF-LATEST-POINTER-v0.1",
-  "latest_version": "ASF-R v0.6",
-  "latest_commit": "82990441829d9e7ca018cd96d854618634d8a3a2",
-  "latest_release_seal": "docs/releases/ASF-R-v0.6-release-seal.json",
+  "latest_version": "ASF-R v0.7",
+  "latest_commit": "3c90a0a99ef01333e946fd5f9e6d3d8c8c20bc1d",
+  "latest_release_seal": "docs/releases/ASF-R-v0.7-release-seal.json",
   "remote_url": "https://github.com/jacksonjp0311-gif/ai-survival-field",
-  "test_count": 130,
-  "current_state": "REPAIR_VALIDATION_REPLAY",
+  "test_count": 156,
+  "current_state": "HUMAN_AUTHORIZED_BOUNDED_REPAIR",
   "active_adapter_modes": ["observe_only", "dry_run", "enforce_block_only"],
   "forbidden_modes": ["enforce_full"],
   "mutation_enabled": false,
-  "repair_enabled": false,
+  "repair_enabled": "bounded_authorized_local_only",
   "self_healing_mutation_enabled": false,
-  "next_operation": "ASF-R v0.7 Human-Authorized Bounded Repair",
+  "next_operation": "ASF-R v0.8 Controlled Wound Closure",
   "non_claim_lock": "Latest pointer rehydrates state only. It does not grant authority."
 }

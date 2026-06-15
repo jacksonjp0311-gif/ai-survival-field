@@ -15,6 +15,8 @@ from asf.core.policy_diff import diff_policies
 from asf.ledger.ledger import verify_record
 from asf.ledger.replay import replay_decision
 from asf.repair.repair_dry_run import dry_run as repair_dry_run
+from asf.repair.bounded_executor import execute_bounded
+from asf.repair.repair_authorization import RepairAuthorizationReceipt, build_receipt
 from asf.repair.repair_plan import RepairPlan
 from asf.repair.repair_planner import plan_from_wound
 from asf.repair.repair_report import build_report as build_repair_report
@@ -128,7 +130,7 @@ def command_enforce_block_only(args: argparse.Namespace) -> int:
 
 
 def _load_json(path: str) -> dict:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+    return json.loads(Path(path).read_text(encoding="utf-8-sig"))
 
 
 def command_repair_plan(args: argparse.Namespace) -> int:
@@ -169,6 +171,27 @@ def command_repair_replay(args: argparse.Namespace) -> int:
     report = replay_repair(plan, expected_repair_plan_hash=args.expected_repair_plan_hash)
     print_json(report.as_dict())
     return 0 if report.replay_pass else 2
+
+
+def command_repair_authorize(args: argparse.Namespace) -> int:
+    plan = RepairPlan.from_dict(_load_json(args.repair_plan))
+    receipt = build_receipt(plan, human_authorizer=args.authorizer, allowed_paths=args.allowed_path)
+    print_json(receipt.as_dict())
+    return 0
+
+
+def command_repair_execute_bounded(args: argparse.Namespace) -> int:
+    plan = RepairPlan.from_dict(_load_json(args.repair_plan))
+    receipt = RepairAuthorizationReceipt.from_dict(_load_json(args.authorization))
+    result = execute_bounded(plan, receipt, root=args.root, target_path=args.target_path, content=args.content)
+    print_json(result.as_dict())
+    return 0 if result.status == "applied" else 2
+
+
+def command_repair_evidence(args: argparse.Namespace) -> int:
+    report = _load_json(args.execution_report)
+    print_json(report.get("evidence") or {"found": False, "non_claim_lock": "Evidence display grants no repair authority."})
+    return 0 if report.get("evidence") else 2
 
 
 def command_adapter_report(args: argparse.Namespace) -> int:
@@ -276,6 +299,21 @@ def build_parser() -> argparse.ArgumentParser:
     repair_replay.add_argument("repair_plan")
     repair_replay.add_argument("--expected-repair-plan-hash", default=None)
     repair_replay.set_defaults(func=command_repair_replay)
+    repair_authorize = repair_sub.add_parser("authorize")
+    repair_authorize.add_argument("repair_plan")
+    repair_authorize.add_argument("--authorizer", required=True)
+    repair_authorize.add_argument("--allowed-path", action="append", default=["docs"])
+    repair_authorize.set_defaults(func=command_repair_authorize)
+    repair_execute = repair_sub.add_parser("execute-bounded")
+    repair_execute.add_argument("repair_plan")
+    repair_execute.add_argument("--authorization", required=True)
+    repair_execute.add_argument("--root", default=".")
+    repair_execute.add_argument("--target-path", default="docs/repair_notes.md")
+    repair_execute.add_argument("--content", default="bounded repair evidence\n")
+    repair_execute.set_defaults(func=command_repair_execute_bounded)
+    repair_evidence = repair_sub.add_parser("evidence")
+    repair_evidence.add_argument("execution_report")
+    repair_evidence.set_defaults(func=command_repair_evidence)
 
     adapter = sub.add_parser("adapter")
     adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)

@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Repair Authorization","type":"object","required":["schema","authorization_receipt_id","human_authorizer","repair_plan_hash","repair_replay_hash","allowed_repair_class","allowed_paths","single_use","authorization_scope","non_claim_lock"]}

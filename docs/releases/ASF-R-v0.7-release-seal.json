@@ -1,0 +1,21 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.7",
+  "version": "ASF-R v0.7",
+  "capability": "human_authorized_bounded_repair",
+  "test_count_minimum": 155,
+  "test_result": "Ran 156 tests OK",
+  "allowed_repair_classes": [
+    "documentation_alignment",
+    "latest_pointer_alignment",
+    "repository_hygiene_metadata",
+    "runtime_geometry_documentation_drift"
+  ],
+  "mutation_enabled": "bounded_authorized_local_only",
+  "wound_closure_enabled": false,
+  "general_repair_authority_enabled": false,
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "proof": "one human-authorized bounded repair plan can be applied to allowlisted low-risk local paths while leaving wounds open",
+  "next_operation": "ASF-R v0.8 Controlled Wound Closure",
+  "non_claim_lock": "ASF-R v0.7 permits only human-authorized bounded repair for allowlisted low-risk repair classes. It does not close wounds, grant general repair authority, enable self-healing mutation, or enable enforce_full."
+}

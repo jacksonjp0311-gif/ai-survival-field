@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.6 repair validation replay: experimental production line.
+ASF-R v0.7 human-authorized bounded repair: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -90,6 +90,9 @@ validation reports, and authorization requests without performing repair.
 
 ASF-R v0.6 proves that repair plans can become replayable evidence without
 performing repair, closing wounds, or granting authority.
+
+ASF-R v0.7 proves that a human can authorize one bounded local repair plan for
+allowlisted low-risk repair classes without granting general repair authority.
 
 ## What This Version Does Not Claim
 
@@ -214,6 +217,18 @@ Replay a repair plan:
 
 ```powershell
 python -m asf.cli repair replay examples/repair_plans/missing_gate_repair_plan.json
+```
+
+Create a bounded repair authorization receipt:
+
+```powershell
+python -m asf.cli repair authorize examples/repair_plans/documentation_alignment_repair_plan.json --authorizer "James Paul Jackson"
+```
+
+Execute a bounded repair with a receipt:
+
+```powershell
+python -m asf.cli repair execute-bounded examples/repair_plans/documentation_alignment_repair_plan.json --authorization receipt.json
 ```
 
 ## Runtime Geometry
@@ -448,6 +463,31 @@ A repair replay is not wound closure.
 v0.6 may prove repair-path coherence. It may not perform repair, close the wound,
 grant authority, enable `enforce_full`, or enable self-healing mutation. The next
 operation is `ASF-R v0.7 Human-Authorized Bounded Repair`.
+
+## v0.7 Human-Authorized Bounded Repair
+
+v0.7 permits one scoped, human-authorized bounded local repair for allowlisted
+low-risk repair classes.
+
+Allowed repair classes:
+
+- documentation_alignment,
+- latest_pointer_alignment,
+- repository_hygiene_metadata,
+- runtime_geometry_documentation_drift.
+
+Core v0.7 law:
+
+```text
+Authorization may permit one bounded repair plan.
+Authorization may not grant general repair authority.
+Repair execution is not wound closure.
+```
+
+v0.7 does not enable autonomous repair, self-healing mutation, `enforce_full`,
+wound closure, policy logic mutation, validator logic mutation, adapter
+enforcement mutation, memory updates, releases, or external mutation APIs. The
+next operation is `ASF-R v0.8 Controlled Wound Closure`.
 
 ## Non-Claim Lock
 

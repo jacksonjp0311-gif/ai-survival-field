@@ -53,6 +53,14 @@ INVARIANTS = [
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-033", "Repair replay must not mutate state.", ["repair", "replay"], "block", "replay evidence only"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-034", "Repair replay cannot grant authority.", ["repair", "authorization"], "block", "request external authorization"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-035", "Repair replay must detect repair-plan hash drift.", ["repair", "replay"], "block", "compare expected and observed hashes"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-041", "Human-authorized repair is not wound closure.", ["repair", "wound"], "block", "defer closure to v0.8"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-042", "Authorization receipt binds to one repair plan hash only.", ["repair", "authorization"], "block", "bind exact repair_plan_hash"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-043", "Bounded repair may only touch allowlisted paths.", ["repair", "filesystem"], "block", "restrict target paths"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-044", "Bounded repair may not modify policy, validator, or adapter enforcement logic.", ["repair", "core"], "block", "refuse protected paths"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-045", "Bounded repair must emit pre/post evidence.", ["repair", "evidence"], "block", "capture hashes and diff"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-046", "Bounded repair must leave wound_closed false.", ["repair", "wound"], "block", "defer wound closure"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-047", "Self-healing mutation remains forbidden.", ["repair", "self_healing"], "block", "require human authorization"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-048", "enforce_full remains forbidden.", ["adapter", "repair"], "block", "stay out of enforce_full"),
 ]
 
 

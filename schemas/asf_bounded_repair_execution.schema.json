@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"ASF Bounded Repair Execution","type":"object","required":["schema","execution_id","status","repair_plan_hash","repair_replay_hash","authorization_receipt_hash","mutation_performed","repair_performed","wound_closed","authority_granted","enforce_full_enabled","non_claim_lock"]}
