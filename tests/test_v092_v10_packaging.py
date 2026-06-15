@@ -36,11 +36,11 @@ class CurrentHeadCISealTests(unittest.TestCase):
 
 class V10PackagingTests(unittest.TestCase):
     def test_package_version_is_release_candidate(self):
-        self.assertEqual(asf.__version__, "1.0.0rc1")
+        self.assertEqual(asf.__version__, "1.0.0")
 
     def test_pyproject_exposes_asf_console_script(self):
         pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
-        self.assertIn('version = "1.0.0rc1"', pyproject)
+        self.assertIn('version = "1.0.0"', pyproject)
         self.assertIn('asf = "asf.cli:main"', pyproject)
 
     def test_readme_has_ci_badge(self):
@@ -50,6 +50,11 @@ class V10PackagingTests(unittest.TestCase):
     def test_readme_states_v1_law(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("v1.0 does not expand authority", readme)
+
+    def test_latest_pointer_identifies_v1_final(self):
+        pointer = json.loads((ROOT / "docs" / "context" / "latest-asf.json").read_text(encoding="utf-8"))
+        self.assertEqual(pointer["latest_version"], "ASF-R v1.0.0")
+        self.assertEqual(pointer["current_state"], "BOUNDED_GOVERNED_RELEASE")
 
     def test_install_doc_exists(self):
         text = (ROOT / "docs" / "install.md").read_text(encoding="utf-8")
@@ -73,29 +78,37 @@ class V10PackagingTests(unittest.TestCase):
         self.assertIn("does not prove truth", text)
 
     def test_v10_release_seal_shape(self):
-        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0-rc1-release-seal.json").read_text(encoding="utf-8"))
-        self.assertEqual(seal["schema"], "ASF-RELEASE-SEAL-v1.0-rc1")
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-seal.json").read_text(encoding="utf-8"))
+        self.assertEqual(seal["schema"], "ASF-RELEASE-SEAL-v1.0.0")
         self.assertFalse(seal["authority_expansion"])
 
     def test_v10_release_seal_requires_remote_ci(self):
-        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0-rc1-release-seal.json").read_text(encoding="utf-8"))
-        self.assertTrue(seal["remote_ci_required"])
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-seal.json").read_text(encoding="utf-8"))
+        self.assertEqual(seal["release_candidate_remote_ci"]["status"], "remote_pass")
 
     def test_v10_release_seal_preserves_bounded_mutation_only(self):
-        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0-rc1-release-seal.json").read_text(encoding="utf-8"))
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-seal.json").read_text(encoding="utf-8"))
         self.assertEqual(seal["mutation_enabled"], "bounded_authorized_local_only")
 
     def test_v10_release_seal_keeps_self_healing_disabled(self):
-        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0-rc1-release-seal.json").read_text(encoding="utf-8"))
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-seal.json").read_text(encoding="utf-8"))
         self.assertFalse(seal["self_healing_mutation_enabled"])
 
     def test_v10_release_seal_keeps_enforce_full_disabled(self):
-        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0-rc1-release-seal.json").read_text(encoding="utf-8"))
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-seal.json").read_text(encoding="utf-8"))
         self.assertFalse(seal["enforce_full_enabled"])
 
     def test_v10_release_seal_has_one_command_demo(self):
-        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0-rc1-release-seal.json").read_text(encoding="utf-8"))
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-seal.json").read_text(encoding="utf-8"))
         self.assertEqual(seal["one_command_demo"], "python -m asf.cli demo")
+
+    def test_v10_release_seal_records_evidence_recursion_rule(self):
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-seal.json").read_text(encoding="utf-8"))
+        self.assertIn("No commit is required to contain proof of its own future CI run", seal["post_release_ci_rule"])
+
+    def test_v10_release_notes_public_claim(self):
+        notes = (ROOT / "docs" / "releases" / "ASF-R-v1.0.0-release-notes.md").read_text(encoding="utf-8")
+        self.assertIn("local evidence-gated control loop", notes)
 
     def test_public_demo_command_runs(self):
         result = subprocess.run(
@@ -138,7 +151,7 @@ class V10PackagingTests(unittest.TestCase):
 
     def test_workflow_ci_evidence_uses_release_candidate_test_count(self):
         workflow = (ROOT / ".github" / "workflows" / "asf-guard.yml").read_text(encoding="utf-8")
-        self.assertIn("--test-count 230", workflow)
+        self.assertIn("--test-count 233", workflow)
 
 
 if __name__ == "__main__":

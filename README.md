@@ -48,7 +48,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v1.0-rc1 bounded production release candidate.
+ASF-R v1.0.0 bounded governed release.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -106,7 +106,7 @@ public demo path without expanding mutation authority.
 ASF-R v0.9.2 seals current-head remote CI evidence for commit
 `d6fe7ad2352fd789fb16a1d20ad76974dc41b1b2`.
 
-ASF-R v1.0-rc1 does not add new authority. It packages the existing governed
+ASF-R v1.0.0 does not add new authority. It packages the existing governed
 recovery loop so it is installable, testable, documented, and reproducible.
 
 Core v1.0 law:
@@ -590,9 +590,9 @@ v0.9 does not expand repair authority, enable autonomous repair, enable
 self-healing mutation, or enable `enforce_full`. Remote CI status remains
 `remote_pending` until GitHub Actions records a run.
 
-## v1.0-rc1 Bounded Production Release Candidate
+## v1.0.0 Bounded Governed Release
 
-v1.0-rc1 is deliberately boring. It does not invent a new power or relax an
+v1.0.0 is deliberately boring. It does not invent a new power or relax an
 authority boundary. It packages the loop that already exists:
 
 ```text
@@ -618,7 +618,7 @@ It adds public-facing reproducibility surfaces:
 - release criteria,
 - release-candidate non-claim lock,
 - v0.9.2 current-head CI seal,
-- v1.0-rc1 release seal.
+- v1.0.0 release seal.
 
 Core v1.0 law:
 
@@ -627,7 +627,7 @@ v1.0 does not expand authority.
 v1.0 makes the existing loop installable, testable, documented, and reproducible.
 ```
 
-v1.0-rc1 does not enable `enforce_full`, autonomous repair, self-healing
+v1.0.0 does not enable `enforce_full`, autonomous repair, self-healing
 mutation, general repair authority, unscoped wound closure, live release
 mutation, memory mutation, or external mutation APIs.
 

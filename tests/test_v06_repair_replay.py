@@ -10,7 +10,7 @@ from asf.repair.repair_replay import replay_repair
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REMOTE_HEAD = "29ac1c29a8d47ed144fb80b0be1b3a2f0682ffbe"
+REMOTE_HEAD = "pending_until_v1_0_0_commit"
 
 
 def plan() -> RepairPlan:

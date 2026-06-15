@@ -16,7 +16,7 @@ class RemoteCIEvidenceSealTests(unittest.TestCase):
     def test_latest_pointer_remote_ci_pass(self):
         pointer = json.loads((ROOT / "docs" / "context" / "latest-asf.json").read_text(encoding="utf-8"))
         self.assertEqual(pointer["remote_ci_status"], "remote_pass")
-        self.assertEqual(pointer["remote_ci_run_id"], 27532961099)
+        self.assertEqual(pointer["remote_ci_run_id"], 27547977961)
 
     def test_remote_ci_artifact_digest_recorded(self):
         pointer = json.loads((ROOT / "docs" / "context" / "latest-asf.json").read_text(encoding="utf-8"))
