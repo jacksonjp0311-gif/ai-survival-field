@@ -1,7 +1,7 @@
 {
   "schema": "ASF-LATEST-POINTER-v0.1",
   "latest_version": "ASF-R v1.1.0-dev3",
-  "latest_commit": "pending_until_v1_1_0_dev3_commit",
+  "latest_commit": "7d4c257c0cb127214ee281bd7398154fdc388b06",
   "latest_release_seal": "docs/releases/ASF-R-v1.1.0-dev3-console-alignment-seal.json",
   "remote_url": "https://github.com/jacksonjp0311-gif/ai-survival-field",
   "test_count": 296,
