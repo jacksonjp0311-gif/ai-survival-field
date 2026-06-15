@@ -1,7 +1,7 @@
 {
   "schema": "ASF-OBSERVABILITY-SEAL-v1.1.0-dev2",
   "version": "ASF-R v1.1.0-dev2",
-  "implementation_commit": "pending_until_commit",
+  "implementation_commit": "4fdf81b066518a9a7a149dcb115c641a76be4b76",
   "capability": "geometry_console_screenshot_evidence_and_readme_surface",
   "package_version": "1.1.0.dev2",
   "test_count_minimum": 284,
