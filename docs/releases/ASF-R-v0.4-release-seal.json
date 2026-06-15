@@ -1,0 +1,18 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v0.1",
+  "version": "v0.4",
+  "test_result": "Ran 79 tests OK",
+  "new_controls": [
+    "enforce_block_only_adapter_mode",
+    "block_enforcer",
+    "block_enforcement_schema",
+    "controlled_block_cli",
+    "adapter_enforce_block_only_cli",
+    "github_actions_guard_template",
+    "non_mutating_workflow_failure"
+  ],
+  "non_claim_lock": "ASF-R v0.4 proves controlled block enforcement only. It does not perform live mutation, self-healing mutation, or production repair.",
+  "controlled_enforcement_law": "The system may enforce a block. The system may not perform a mutation.",
+  "next_version": "v0.5 Repair Planner Dry Run",
+  "release_claim_ceiling": "residual_stratified"
+}

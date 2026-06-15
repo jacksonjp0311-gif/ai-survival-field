@@ -46,7 +46,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.3 adapter enforcement dry run: experimental production line.
+ASF-R v0.4 controlled block enforcement: experimental production line.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -81,6 +81,9 @@ ASF-R v0.2 proves that explicit policy controls continuation.
 ASF-R v0.3 proves that adapters can observe proposed real-world actions, package
 them into governance events, run the runtime loop, emit evidence, and simulate
 enforcement without mutating state.
+
+ASF-R v0.4 proves that controlled workflows can fail closed when blocked while
+still performing no mutation.
 
 ## What This Version Does Not Claim
 
@@ -171,6 +174,18 @@ Run the loop in dry-run adapter mode:
 python -m asf.cli loop dry-run examples/artifacts/release_blocked_missing_tests.json --action release
 ```
 
+Enforce a controlled block:
+
+```powershell
+python -m asf.cli enforce block-only examples/artifacts/release_blocked_missing_tests.json --action release
+```
+
+Run adapter block-only enforcement:
+
+```powershell
+python -m asf.cli adapter enforce-block-only examples/adapter_events/filesystem_write_blocked.json
+```
+
 ## Runtime Geometry
 
 ```text
@@ -217,8 +232,11 @@ ai-survival-field/
     adapter_safety.md
     authorization_receipts.md
     capability_tokens.md
+    controlled_enforcement_gate.md
     decision_replay.md
+    enforce_block_only.md
     governance_debt.md
+    github_actions_guard.md
     invariant_registry.md
     non_claim_lock.md
     operator_doctor.md
@@ -309,6 +327,32 @@ Dry-run may not perform it.
 v0.3 does not enable live mutation, live self-healing, production enforcement,
 or autonomous authority. Live enforcement is reserved for `ASF-R v0.4 Controlled
 Enforcement Gate`.
+
+## v0.4 Controlled Enforcement Gate
+
+v0.4 proves that ASF-R can fail closed in controlled workflows while remaining
+non-mutating.
+
+It adds:
+
+- `enforce_block_only` adapter mode,
+- block enforcer,
+- block enforcement schema,
+- CLI controlled block command,
+- adapter block-only enforcement command,
+- GitHub Actions guard template,
+- v0.4 release seal.
+
+Core v0.4 law:
+
+```text
+The system may enforce a block.
+The system may not perform a mutation.
+```
+
+v0.4 does not enable `enforce_full`, live mutation, live repair, self-healing
+mutation, repository writes, release creation, or memory promotion. The next
+operation is `ASF-R v0.5 Repair Planner Dry Run`.
 
 ## Non-Claim Lock
 

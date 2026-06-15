@@ -33,6 +33,11 @@ INVARIANTS = [
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-013", "Enforcement report must bind to decision hash.", ["adapter", "decision"], "block", "bind report to current decision"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-014", "Live enforcement is forbidden before explicit release gate.", ["adapter", "release"], "block", "use dry-run only"),
     Invariant("ASF-INVARIANT-v0.1", "ASF-INV-015", "Dry-run success is not production permission.", ["adapter", "operator"], "block", "require controlled enforcement gate"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-016", "enforce_block_only may fail closed but may not mutate.", ["adapter", "workflow"], "block", "emit enforcement report without mutation"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-017", "A controlled block is not a repair.", ["adapter", "wound"], "block", "preserve wound until closure evidence exists"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-018", "Blocking evidence does not close the wound.", ["ledger", "wound"], "block", "require closure evidence"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-019", "enforce_full remains forbidden before production release gate.", ["adapter", "release"], "block", "stay in block-only mode"),
+    Invariant("ASF-INVARIANT-v0.1", "ASF-INV-020", "Workflow failure caused by ASF-R must emit an enforcement report.", ["workflow", "adapter"], "block", "write or return enforcement report"),
 ]
 
 

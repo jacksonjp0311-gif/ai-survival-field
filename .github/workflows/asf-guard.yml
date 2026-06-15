@@ -1,0 +1,39 @@
+name: ASF Guard
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  controlled-block:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run tests
+        run: python -m unittest discover tests
+
+      - name: Permit bounded draft
+        run: python -m asf.cli enforce block-only examples/artifacts/draft_allowed.json --action draft
+
+      - name: Confirm blocked release fails closed
+        shell: bash
+        run: |
+          set +e
+          python -m asf.cli enforce block-only examples/artifacts/release_blocked_missing_tests.json --action release
+          code=$?
+          if [ "$code" -ne 2 ]; then
+            echo "Expected ASF-R to fail closed with exit code 2"
+            exit 1
+          fi
+          exit 0

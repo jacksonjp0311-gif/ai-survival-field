@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
+from asf.adapters.block_enforcer import enforce_block_only, event_for_artifact
 from asf.adapters.dry_run import simulate
 from asf.adapters.event import AdapterEvent
 from asf.adapters.enforcement_report import report_invariant_ok
@@ -106,6 +107,20 @@ def command_adapter_dry_run(args: argparse.Namespace) -> int:
     return 0 if report_invariant_ok(report.as_dict()) else 2
 
 
+def command_adapter_enforce_block_only(args: argparse.Namespace) -> int:
+    event = _load_event(args.event)
+    result = enforce_block_only(event, policy_path=args.policy, root=args.root)
+    print_json(result.as_dict())
+    return result.exit_code
+
+
+def command_enforce_block_only(args: argparse.Namespace) -> int:
+    event = event_for_artifact(args.artifact, args.action)
+    result = enforce_block_only(event, policy_path=args.policy, root=args.root)
+    print_json(result.as_dict())
+    return result.exit_code
+
+
 def command_adapter_report(args: argparse.Namespace) -> int:
     path = Path(args.report_id)
     if path.is_file():
@@ -181,6 +196,15 @@ def build_parser() -> argparse.ArgumentParser:
     diff.add_argument("new_policy")
     diff.set_defaults(func=command_policy_diff)
 
+    enforce = sub.add_parser("enforce")
+    enforce_sub = enforce.add_subparsers(dest="enforce_command", required=True)
+    block_only = enforce_sub.add_parser("block-only")
+    block_only.add_argument("artifact")
+    block_only.add_argument("--action", required=True)
+    block_only.add_argument("--policy", default="policies/default.yaml")
+    block_only.add_argument("--root", default=".")
+    block_only.set_defaults(func=command_enforce_block_only)
+
     adapter = sub.add_parser("adapter")
     adapter_sub = adapter.add_subparsers(dest="adapter_command", required=True)
     observe = adapter_sub.add_parser("observe")
@@ -191,6 +215,11 @@ def build_parser() -> argparse.ArgumentParser:
     dry.add_argument("--policy", default="policies/default.yaml")
     dry.add_argument("--root", default=".")
     dry.set_defaults(func=command_adapter_dry_run)
+    enforce_block = adapter_sub.add_parser("enforce-block-only")
+    enforce_block.add_argument("event")
+    enforce_block.add_argument("--policy", default="policies/default.yaml")
+    enforce_block.add_argument("--root", default=".")
+    enforce_block.set_defaults(func=command_adapter_enforce_block_only)
     report = adapter_sub.add_parser("report")
     report.add_argument("report_id")
     report.set_defaults(func=command_adapter_report)

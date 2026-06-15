@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASF Block Enforcement",
+  "type": "object",
+  "required": [
+    "schema",
+    "exit_code",
+    "enforcement_report",
+    "decision",
+    "ledger",
+    "mutation_performed",
+    "repair_performed",
+    "wound_closed",
+    "non_claim_lock"
+  ],
+  "properties": {
+    "schema": {"const": "ASF-BLOCK-ENFORCEMENT-v0.1"},
+    "exit_code": {"type": "integer"},
+    "enforcement_report": {"type": "object"},
+    "decision": {"type": "object"},
+    "wound": {"type": ["object", "null"]},
+    "ledger": {"type": "object"},
+    "ui": {"type": "string"},
+    "mutation_performed": {"const": false},
+    "repair_performed": {"const": false},
+    "wound_closed": {"const": false},
+    "non_claim_lock": {"type": "string"}
+  }
+}
