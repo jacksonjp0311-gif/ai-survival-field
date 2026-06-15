@@ -1,5 +1,7 @@
 # AI Survival Field Runtime
 
+[![ASF Guard](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml/badge.svg)](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml)
+
 AI Survival Field Runtime, or ASF-R, is a governed continuation engine for
 AI-generated and human-generated artifacts.
 
@@ -46,7 +48,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v0.9 remote CI evidence and dogfood: experimental production line.
+ASF-R v1.0-rc1 bounded production release candidate.
 ```
 
 This repository is the production-oriented successor line to Survivor Field
@@ -101,6 +103,19 @@ authority.
 ASF-R v0.9 proves that the runtime can emit CI evidence, dogfood reports, and a
 public demo path without expanding mutation authority.
 
+ASF-R v0.9.2 seals current-head remote CI evidence for commit
+`d6fe7ad2352fd789fb16a1d20ad76974dc41b1b2`.
+
+ASF-R v1.0-rc1 does not add new authority. It packages the existing governed
+recovery loop so it is installable, testable, documented, and reproducible.
+
+Core v1.0 law:
+
+```text
+v1.0 does not expand authority.
+v1.0 makes the existing loop installable, testable, documented, and reproducible.
+```
+
 ## What This Version Does Not Claim
 
 ASF-R does not:
@@ -117,6 +132,18 @@ A fail means propagation is blocked, downgraded, quarantined, or converted into 
 wound package.
 
 ## Quick Start
+
+Install editable:
+
+```powershell
+python -m pip install -e .
+```
+
+Run the one-command demo:
+
+```powershell
+python -m asf.cli demo
+```
 
 Run tests:
 
@@ -306,6 +333,7 @@ ai-survival-field/
     forward_progress_governor.md
     governance_debt.md
     github_actions_guard.md
+    install.md
     invariant_registry.md
     non_claim_lock.md
     operator_doctor.md
@@ -318,6 +346,10 @@ ai-survival-field/
     repair_validation.md
     runtime_alignment_auditor.md
     self_healing_horizon.md
+    quickstart.md
+    examples_walkthrough.md
+    v1_0_release_criteria.md
+    v1_0_non_claim_lock.md
     v0.3_dry_run_boundary.md
     releases/
   tests/
@@ -557,6 +589,47 @@ It adds:
 v0.9 does not expand repair authority, enable autonomous repair, enable
 self-healing mutation, or enable `enforce_full`. Remote CI status remains
 `remote_pending` until GitHub Actions records a run.
+
+## v1.0-rc1 Bounded Production Release Candidate
+
+v1.0-rc1 is deliberately boring. It does not invent a new power or relax an
+authority boundary. It packages the loop that already exists:
+
+```text
+wound
+-> repair plan
+-> dry-run
+-> validation
+-> replay
+-> authorization
+-> bounded repair
+-> evidence
+-> closure validation
+-> closure record
+```
+
+It adds public-facing reproducibility surfaces:
+
+- CI badge,
+- editable install command,
+- one-command demo,
+- quickstart,
+- examples walkthrough,
+- release criteria,
+- release-candidate non-claim lock,
+- v0.9.2 current-head CI seal,
+- v1.0-rc1 release seal.
+
+Core v1.0 law:
+
+```text
+v1.0 does not expand authority.
+v1.0 makes the existing loop installable, testable, documented, and reproducible.
+```
+
+v1.0-rc1 does not enable `enforce_full`, autonomous repair, self-healing
+mutation, general repair authority, unscoped wound closure, live release
+mutation, memory mutation, or external mutation APIs.
 
 ## Non-Claim Lock
 

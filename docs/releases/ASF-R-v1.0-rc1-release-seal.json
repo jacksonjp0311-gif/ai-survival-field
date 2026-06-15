@@ -1,0 +1,21 @@
+{
+  "schema": "ASF-RELEASE-SEAL-v1.0-rc1",
+  "version": "ASF-R v1.0-rc1",
+  "capability": "bounded_production_release_candidate",
+  "package_version": "1.0.0rc1",
+  "implementation_commit": "pending_until_commit",
+  "test_count_minimum": 230,
+  "test_result": "Ran 230 tests OK locally",
+  "remote_ci_required": true,
+  "remote_ci_status": "pending_for_v1_0_rc1_head",
+  "authority_expansion": false,
+  "mutation_enabled": "bounded_authorized_local_only",
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "one_command_install": "python -m pip install -e .",
+  "one_command_demo": "python -m asf.cli demo",
+  "proof": "ASF-R v1.0-rc1 packages the existing governed recovery loop as installable, testable, documented, and reproducible without expanding authority.",
+  "release_law": "v1.0 does not expand authority. v1.0 makes the existing loop installable, testable, documented, and reproducible.",
+  "next_operation": "ASF-R v1.0 final after current-head remote CI evidence and external review path",
+  "non_claim_lock": "ASF-R v1.0-rc1 is a bounded release candidate. It does not claim production security, formal verification, autonomous safety, factual truth validation, or general repair authority."
+}
