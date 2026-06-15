@@ -84,7 +84,7 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
 
     def test_status_strip_contains_latest_version_and_ci(self):
         strip = build_geometry_state(ROOT, SAMPLE_SUMMARY).status_strip
-        self.assertEqual(strip["latest_version"], "ASF-R v1.1.0-dev1")
+        self.assertEqual(strip["latest_version"], "ASF-R v1.1.0-dev2")
         self.assertEqual(strip["ci_evidence_status"], "remote_pass")
 
     def test_legend_contains_neon_statuses(self):

@@ -1,0 +1,25 @@
+{
+  "schema": "ASF-OBSERVABILITY-SEAL-v1.1.0-dev2",
+  "version": "ASF-R v1.1.0-dev2",
+  "implementation_commit": "pending_until_commit",
+  "capability": "geometry_console_screenshot_evidence_and_readme_surface",
+  "package_version": "1.1.0.dev2",
+  "test_count_minimum": 284,
+  "test_result": "local_pass",
+  "authority_expansion": false,
+  "mutation_enabled": "unchanged_from_v1_0_0",
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "ui_mode": "read_only_observe",
+  "gate_count": 25,
+  "status_card_count": 12,
+  "screenshot_path": "docs/assets/asf-r-triadic-geometry-console.png",
+  "readme_section": "ASF-R Triadic Geometry Console",
+  "runtime_activation": [
+    ".\\scripts\\run-asf-full-loop.ps1 -Geometry",
+    "./scripts/run-asf-full-loop.sh --geometry",
+    "python -m asf.cli full-loop run --geometry"
+  ],
+  "proof": "ASF-R v1.1.0-dev2 makes the product-grade geometry console reproducible, screenshot-backed, and README-visible without adding authorization, repair, wound closure, policy mutation, memory mutation, enforce_full, or general authority.",
+  "non_claim_lock": "The Triadic Geometry Console observes and illuminates the governed loop only. It does not prove truth, make AI safe, provide formal verification, provide production security, authorize autonomous action, or grant repair authority."
+}

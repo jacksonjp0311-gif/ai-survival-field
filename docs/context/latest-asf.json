@@ -1,11 +1,11 @@
 {
   "schema": "ASF-LATEST-POINTER-v0.1",
-  "latest_version": "ASF-R v1.1.0-dev1",
-  "latest_commit": "c77506f96199cd71c9e26a633d8f5fe05f1bed3d",
-  "latest_release_seal": "docs/releases/ASF-R-v1.1.0-dev1-product-console-seal.json",
+  "latest_version": "ASF-R v1.1.0-dev2",
+  "latest_commit": "pending_until_v1_1_0_dev2_commit",
+  "latest_release_seal": "docs/releases/ASF-R-v1.1.0-dev2-geometry-screenshot-seal.json",
   "remote_url": "https://github.com/jacksonjp0311-gif/ai-survival-field",
-  "test_count": 267,
-  "current_state": "TRIADIC_GEOMETRY_CONSOLE_OBSERVABILITY",
+  "test_count": 284,
+  "current_state": "TRIADIC_GEOMETRY_CONSOLE_SCREENSHOT_EVIDENCE",
   "active_adapter_modes": ["observe_only", "dry_run", "enforce_block_only"],
   "forbidden_modes": ["enforce_full"],
   "mutation_enabled": false,
@@ -18,6 +18,6 @@
   "remote_ci_evidence_artifact": "asf-ci-evidence",
   "remote_ci_artifact_id": 7638761888,
   "remote_ci_artifact_digest": "sha256:9b652261a4397ed06bbe8227097d176b6adcf426d96215327a6a3a18eb1c3e4d",
-  "next_operation": "ASF-R v1.1 product-grade geometry console review and screenshot evidence",
+  "next_operation": "ASF-R v1.1.0-rc1 geometry console release candidate",
   "non_claim_lock": "Latest pointer rehydrates state only. It does not grant authority."
 }

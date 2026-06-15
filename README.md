@@ -48,7 +48,7 @@ No wound package, no repair claim.
 ## Status
 
 ```text
-ASF-R v1.1.0-dev1 product-grade triadic geometry console polish.
+ASF-R v1.1.0-dev2 geometry console screenshot evidence and README surface.
 ```
 
 The latest stable release tag remains `v1.0.0`. The `main` branch now carries
@@ -397,19 +397,51 @@ ai-survival-field/
 
 ## ASF-R Triadic Geometry Console
 
+![ASF-R Triadic Geometry Console](docs/assets/asf-r-triadic-geometry-console.png)
+
 ASF-R includes a read-only geometry console for observing the governed runtime
 loop while it runs.
 
 The console is not a control panel.
 
-It is a local read-only observability surface that opens with the full loop,
-follows runtime state, lights every gate in the runtime path, and surfaces
+It is a local read-only runtime observability surface. It opens with the full
+loop, follows runtime state, lights every gate in the runtime path, and surfaces
 wound/failure packages when propagation is blocked.
 
 ```text
 The geometry shows the loop.
 The CLI shows the runtime trace.
 The wound package shows the consequence.
+The screenshot proves the surface is reproducible.
+The README teaches the operator.
+```
+
+Runtime activation:
+
+PowerShell:
+
+```powershell
+cd C:\Users\jacks\OneDrive\Desktop\ai-survival-field
+.\scripts\run-asf-full-loop.ps1 -Geometry
+```
+
+Bash:
+
+```bash
+cd ~/ai-survival-field
+./scripts/run-asf-full-loop.sh --geometry
+```
+
+Python:
+
+```powershell
+python -m asf.cli full-loop run --geometry
+```
+
+Screenshot metadata:
+
+```powershell
+python -m asf.cli geometry screenshot --output docs/assets/asf-r-triadic-geometry-console.png --width 1280 --height 720
 ```
 
 Read-only UI law:
@@ -431,9 +463,9 @@ The UI may not grant authority.
 Triadic geometry:
 
 ```text
-Evidence / Rehydration
-Governance / Coherence
-Action / Recovery
+∿ Evidence / Rehydration
+△ Governance / Coherence
+↧ Action / Recovery
 ```
 
 Gate colors:
@@ -486,6 +518,23 @@ NO ACTIVE WOUND
 When a gate fails or propagation is blocked, the panel glows red and shows wound
 ID, failed gate, failure class, decision, permission ceiling, blocked actions,
 permitted actions, repair path, repair status, and closure status.
+
+Bottom status cards:
+
+```text
+VERSION
+COMMIT
+RELEASE SEAL
+CURRENT STATE
+CURRENT ACTION
+DECISION
+PERMISSION CEILING
+WOUND ID
+AUTHORIZATION RECEIPT
+CLOSURE STATUS
+CI EVIDENCE STATUS
+NON-CLAIM LOCK
+```
 
 Geometry console non-claim lock:
 

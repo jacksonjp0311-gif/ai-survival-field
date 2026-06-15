@@ -20,6 +20,7 @@ from asf.repair.repair_replay import replay_repair
 from asf.repair.repair_validation import validate_plan
 from asf.runtime import run_loop
 from asf.ui.geometry.gate_mapper import build_geometry_state
+from asf.ui.geometry.screenshot import DEFAULT_HEIGHT, DEFAULT_SCREENSHOT, DEFAULT_WIDTH, screenshot_metadata
 from asf.wounds.closure import build_closure_request, close_wound, validate_closure
 
 
@@ -118,6 +119,23 @@ def run_full_loop(root: str | Path = ".", *, geometry: bool = False) -> dict[str
         "self_healing_mutation_enabled": False,
         "non_claim_lock": "Full-loop summary records local governed-loop evidence only. It grants no authority.",
     }
+    runtime_screenshot = run_dir / "geometry-console.png"
+    metadata = screenshot_metadata(
+        output=root_path / DEFAULT_SCREENSHOT,
+        runtime_output=runtime_screenshot,
+        root=root_path,
+        width=DEFAULT_WIDTH,
+        height=DEFAULT_HEIGHT,
+    )
+    summary.update({
+        "geometry_screenshot": metadata["geometry_screenshot"],
+        "geometry_screenshot_runtime": metadata["geometry_screenshot_runtime"],
+        "geometry_screenshot_width": metadata["geometry_screenshot_width"],
+        "geometry_screenshot_height": metadata["geometry_screenshot_height"],
+        "geometry_visual_check": metadata["geometry_visual_check"],
+        "geometry_screenshot_exists": metadata["geometry_screenshot_exists"],
+        "geometry_screenshot_runtime_exists": metadata["geometry_screenshot_runtime_exists"],
+    })
     summary["geometry_state"] = build_geometry_state(root_path, summary).as_dict()
     summary["summary_hash"] = stable_hash(summary)
     (run_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True), encoding="utf-8")

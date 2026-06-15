@@ -30,6 +30,7 @@ from asf.runtime import run_loop
 from asf.ui.doctor import run_doctor
 from asf.ui.geometry.app import serve as serve_geometry_console
 from asf.ui.geometry.gate_mapper import build_geometry_state
+from asf.ui.geometry.screenshot import screenshot_metadata
 from asf.wounds.closure import WoundClosureRequest, build_closure_request, close_wound, validate_closure
 
 
@@ -262,6 +263,12 @@ def command_geometry_serve(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_geometry_screenshot(args: argparse.Namespace) -> int:
+    metadata = screenshot_metadata(output=args.output, root=args.root, width=args.width, height=args.height)
+    print_json(metadata)
+    return 0 if metadata["geometry_screenshot_exists"] else 2
+
+
 def command_full_loop_run(args: argparse.Namespace) -> int:
     summary = run_full_loop(args.root, geometry=args.geometry)
     print_json({
@@ -444,6 +451,12 @@ def build_parser() -> argparse.ArgumentParser:
     geometry_serve.add_argument("--host", default="127.0.0.1")
     geometry_serve.add_argument("--port", type=int, default=8765)
     geometry_serve.set_defaults(func=command_geometry_serve)
+    geometry_screenshot = geometry_sub.add_parser("screenshot")
+    geometry_screenshot.add_argument("--output", default="docs/assets/asf-r-triadic-geometry-console.png")
+    geometry_screenshot.add_argument("--root", default=".")
+    geometry_screenshot.add_argument("--width", type=int, default=1280)
+    geometry_screenshot.add_argument("--height", type=int, default=720)
+    geometry_screenshot.set_defaults(func=command_geometry_screenshot)
 
     full_loop = sub.add_parser("full-loop")
     full_loop_sub = full_loop.add_subparsers(dest="full_loop_command", required=True)

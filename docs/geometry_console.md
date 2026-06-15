@@ -5,7 +5,9 @@ observing the governed runtime loop.
 
 It is not a control panel.
 
-v1.1.0-dev1 evolves the surface toward the product-grade target:
+v1.1.0-dev1 evolves the surface toward the product-grade target.
+
+v1.1.0-dev2 adds screenshot evidence and a README-visible operator surface:
 
 - top header badges,
 - left gate legend,
@@ -14,7 +16,10 @@ v1.1.0-dev1 evolves the surface toward the product-grade target:
 - red wound/failure package panel,
 - bottom status cards,
 - `GET /events` Server-Sent Events stream,
+- screenshot artifact at `docs/assets/asf-r-triadic-geometry-console.png`,
 - no mutation endpoints.
+
+![ASF-R Triadic Geometry Console](assets/asf-r-triadic-geometry-console.png)
 
 It opens beside the full loop, follows runtime state, lights every gate in the
 path, and surfaces wound/failure packages when propagation is blocked.
@@ -116,6 +121,18 @@ Bash with geometry flag:
 ```bash
 cd ~/ai-survival-field
 ./scripts/run-asf-full-loop.sh --geometry
+```
+
+Python with geometry flag:
+
+```bash
+python -m asf.cli full-loop run --geometry
+```
+
+Screenshot metadata command:
+
+```bash
+python -m asf.cli geometry screenshot --output docs/assets/asf-r-triadic-geometry-console.png --width 1280 --height 720
 ```
 
 ## Non-Claim Lock
