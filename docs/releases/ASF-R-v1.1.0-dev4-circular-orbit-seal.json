@@ -1,7 +1,7 @@
 {
   "schema": "ASF-OBSERVABILITY-SEAL-v1.1.0-dev4",
   "version": "ASF-R v1.1.0-dev4",
-  "implementation_commit": "d21c35c64020e61ab553d31d47ea60b48498fd75",
+  "implementation_commit": "7d675875e2264cd49e0dc399a07cecd4479fe7ca",
   "capability": "circular_gate_orbit_circuit_trace_and_footer_polish",
   "package_version": "1.1.0.dev4",
   "test_count_minimum": 325,
