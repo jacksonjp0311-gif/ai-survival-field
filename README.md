@@ -1,20 +1,47 @@
+
+<div align="center">
+
 # AI Survival Field Runtime
+
+### Evidence-gated continuation for AI-generated artifacts.
+
+**Rehydrate proof state. Apply policy gates. Block unsafe promotion. Package wounds. Validate repair paths. Watch the loop in read-only geometry.**
 
 [![ASF Guard](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml/badge.svg)](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml)
 
-AI Survival Field Runtime, or ASF-R, is a governed continuation engine for
-AI-generated and human-generated artifacts.
+<img src="docs/assets/asf-r-triadic-geometry-console.png" alt="ASF-R Triadic Geometry Console" width="920">
 
-It does not prove truth.
+</div>
 
-It determines what an artifact is allowed to become.
+---
 
-ASF-R rehydrates the current proof state, maps the artifact through RCC Nexus,
-validates the artifact survival field, applies policy, checks locks and gates,
-emits wound packages for blocked propagation, records evidence, and renders the
-runtime geometry for the operator.
+## What ASF-R Is
 
-Core rule:
+AI systems do not only need better answers. They need boundaries around what an answer is allowed to become.
+
+**AI Survival Field Runtime, or ASF-R, is a governed continuation runtime for AI-generated and human-generated artifacts.** It loads repository truth, rehydrates the current proof state, routes artifacts through RCC Nexus, applies policy gates and claim ceilings, blocks unsafe promotion, packages failures as wound records, and renders the whole path through a read-only Triadic Geometry Console.
+
+ASF-R does not prove truth. It does not make AI safe by itself. It gives operators a bounded runtime loop for answering a narrower and more useful question:
+
+```text
+What is this artifact allowed to become next?
+```
+
+The runtime path is intentionally visible:
+
+```text
+artifact
+-> rehydration
+-> RCC route
+-> policy gates
+-> guard decision
+-> wound package if blocked
+-> repair / closure evidence
+-> ledger record
+-> read-only geometry console
+```
+
+Core operating law:
 
 ```text
 Rehydrate before reasoning.
@@ -25,24 +52,12 @@ Package every wound.
 Show the geometry.
 ```
 
-Inherited SFT law:
+ASF-R is built for one disciplined purpose:
 
 ```text
-Validate before action.
-Ceiling before claim.
-Gate before promotion.
-Block before drift.
-```
-
-Production ASF law:
-
-```text
-No rehydration, no action.
-No orientation, no mutation.
-No valid artifact, no durable state.
-No cleared gate, no promotion.
 No evidence, no authority.
-No wound package, no repair claim.
+No cleared gate, no promotion.
+No validated path, no durable continuation.
 ```
 
 ## Status
