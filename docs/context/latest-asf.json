@@ -1,7 +1,7 @@
 {
   "schema": "ASF-LATEST-POINTER-v0.1",
   "latest_version": "ASF-R v1.1.0-dev4",
-  "latest_commit": "7d675875e2264cd49e0dc399a07cecd4479fe7ca",
+  "latest_commit": "4ceab058818020c91045a0e473a3241a5c946585",
   "latest_release_seal": "docs/releases/ASF-R-v1.1.0-dev4-circular-orbit-seal.json",
   "remote_url": "https://github.com/jacksonjp0311-gif/ai-survival-field",
   "test_count": 335,
