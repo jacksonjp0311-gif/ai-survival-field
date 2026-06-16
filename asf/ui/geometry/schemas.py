@@ -38,6 +38,9 @@ class GeometryGate:
     y: int = 0
     label_x: int = 0
     label_y: int = 0
+    angle_deg: float = 0.0
+    label_anchor: str = "middle"
+    label_lines: list[str] | None = None
     failed: bool = False
     wound_linked: bool = False
 
@@ -51,6 +54,7 @@ class GeometryState:
     console_name: str
     mode: str
     vertices: dict[str, str]
+    geometry: dict[str, Any]
     legend: dict[str, str]
     gates: list[dict[str, Any]]
     wound_panel: dict[str, Any]

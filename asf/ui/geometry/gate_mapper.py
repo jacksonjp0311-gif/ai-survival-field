@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from pathlib import Path
 from typing import Any
 
@@ -47,40 +48,42 @@ LEGEND = {
 
 KNOWN_STATUSES = {"pass", "blocked", "fail", "pending", "read_only", "inactive", "forbidden"}
 
-GATE_COORDINATES = [
-    (334, 145), (286, 184), (252, 234), (230, 292), (222, 354),
-    (236, 416), (270, 474), (320, 522), (382, 554), (450, 570),
-    (520, 568), (590, 548), (654, 514), (710, 468), (754, 414),
-    (786, 354), (800, 292), (792, 230), (762, 174), (714, 132),
-    (652, 104), (586, 92), (520, 96), (456, 104), (394, 122),
-]
+GEOMETRY_CENTER = {"x": 490, "y": 345}
+GATE_ORBIT_RADIUS = 245
+TRIANGLE_RADIUS = 185
+CORE_RADIUS = 64
+GATE_NODE_RADIUS = 17
+LABEL_RADIUS = GATE_ORBIT_RADIUS + 42
+ANGLE_STEP = 360 / 25
+START_ANGLE = -130
+ANGLE_DIRECTION = -1
 
-LABEL_OVERRIDES = {
-    1: (268, 142),
-    2: (218, 182),
-    3: (188, 234),
-    4: (162, 292),
-    5: (154, 354),
-    6: (168, 416),
-    7: (200, 474),
-    8: (252, 522),
-    9: (350, 592),
-    10: (450, 612),
-    11: (520, 610),
-    12: (590, 590),
-    13: (666, 552),
-    14: (782, 468),
-    15: (830, 414),
-    16: (862, 354),
-    17: (872, 292),
-    18: (866, 230),
-    19: (832, 174),
-    20: (778, 132),
-    21: (710, 86),
-    22: (630, 78),
-    23: (520, 132),
-    24: (410, 78),
-    25: (330, 96),
+LABEL_LINES = {
+    "Latest Pointer Loaded": ["Latest Pointer", "Loaded"],
+    "Rehydration Passed": ["Rehydration", "Passed"],
+    "Release Seal Loaded": ["Release Seal", "Loaded"],
+    "Repository Truth Aligned": ["Repository Truth", "Aligned"],
+    "CI Evidence Loaded": ["CI Evidence", "Loaded"],
+    "Ledger Verify": ["Ledger", "Verify"],
+    "Policy Loaded": ["Policy", "Loaded"],
+    "Invariants Loaded": ["Invariants", "Loaded"],
+    "Claim Ceiling Assigned": ["Claim Ceiling", "Assigned"],
+    "Artifact Validated": ["Artifact", "Validated"],
+    "Decision Computed": ["Decision", "Computed"],
+    "Permission Checked": ["Permission", "Checked"],
+    "Non-Claim Lock Preserved": ["Non-Claim Lock", "Preserved"],
+    "Block Enforcement Checked": ["Block Enforcement", "Checked"],
+    "Wound Emitted": ["Wound", "Emitted"],
+    "Repair Plan Created": ["Repair Plan", "Created"],
+    "Repair Dry-Run Passed": ["Repair Dry-Run", "Passed"],
+    "Repair Validation Passed": ["Repair Validation", "Passed"],
+    "Repair Replay Passed": ["Repair Replay", "Passed"],
+    "Authorization Bound": ["Authorization", "Bound"],
+    "Bounded Repair Executed": ["Bounded Repair", "Executed"],
+    "Post-Repair Evidence Captured": ["Post-Repair Evidence", "Captured"],
+    "Closure Request Created": ["Closure Request", "Created"],
+    "Closure Validation Passed": ["Closure Validation", "Passed"],
+    "Closure Record Written": ["Closure Record", "Written"],
 }
 
 VERTICES = {
@@ -88,7 +91,6 @@ VERTICES = {
     "governance": "Governance / Coherence",
     "action": "Action / Recovery",
 }
-
 
 def build_geometry_state(root: str | Path = ".", run_summary: dict[str, Any] | None = None) -> GeometryState:
     root_path = Path(root)
@@ -119,6 +121,7 @@ def build_geometry_state(root: str | Path = ".", run_summary: dict[str, Any] | N
         console_name="ASF-R Triadic Geometry Console",
         mode="read_only_observe",
         vertices=VERTICES,
+        geometry=geometry_metadata(),
         legend=LEGEND,
         gates=[gate.as_dict() for gate in gates],
         wound_panel=wound_panel(wound, decision),
@@ -173,8 +176,10 @@ def map_gates(root: Path, pointer: dict[str, Any], seal: dict[str, Any], summary
             status = "pending" if gate_id >= 16 else "inactive"
         else:
             status = "inactive"
-        x, y = GATE_COORDINATES[gate_id - 1]
-        label_x, label_y = LABEL_OVERRIDES.get(gate_id, label_coordinates(x, y))
+        angle = gate_angle(gate_id)
+        x, y = orbit_point(angle, GATE_ORBIT_RADIUS)
+        label_x, label_y = label_point(angle)
+        anchor = label_anchor(angle)
         gates.append(GeometryGate(
             gate_id,
             label,
@@ -185,6 +190,9 @@ def map_gates(root: Path, pointer: dict[str, Any], seal: dict[str, Any], summary
             y=y,
             label_x=label_x,
             label_y=label_y,
+            angle_deg=round(angle, 3),
+            label_anchor=anchor,
+            label_lines=LABEL_LINES.get(label, [label]),
             failed=status in {"blocked", "fail"},
             wound_linked=gate_id == failed_gate(summary, summary.get("wound_package") or summary.get("wound") or {}),
         ))
@@ -234,13 +242,61 @@ def cli_panel(summary: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def label_coordinates(x: int, y: int) -> tuple[int, int]:
-    center_x, center_y = 520, 360
-    dx = x - center_x
-    dy = y - center_y
-    offset_x = 88 if dx >= 0 else -88
-    offset_y = 18 if abs(dx) > 130 else (-44 if dy < 0 else 46)
-    return x + offset_x, y + offset_y
+def gate_angle(gate_id: int) -> float:
+    return START_ANGLE + (gate_id - 1) * ANGLE_DIRECTION * ANGLE_STEP
+
+
+def orbit_point(angle_deg: float, radius: float) -> tuple[int, int]:
+    theta = math.radians(angle_deg)
+    return (
+        round(GEOMETRY_CENTER["x"] + radius * math.cos(theta)),
+        round(GEOMETRY_CENTER["y"] + radius * math.sin(theta)),
+    )
+
+
+def label_anchor(angle_deg: float) -> str:
+    cosine = math.cos(math.radians(angle_deg))
+    if cosine > 0.35:
+        return "start"
+    if cosine < -0.35:
+        return "end"
+    return "middle"
+
+
+def label_point(angle_deg: float) -> tuple[int, int]:
+    sine = math.sin(math.radians(angle_deg))
+    radius = LABEL_RADIUS
+    if sine < -0.85:
+        radius = LABEL_RADIUS + 38
+    elif sine < -0.65:
+        radius = LABEL_RADIUS + 22
+    return orbit_point(angle_deg, radius)
+
+
+TRIANGLE_VERTICES = {
+    "top": orbit_point(-90, TRIANGLE_RADIUS),
+    "left": orbit_point(150, TRIANGLE_RADIUS),
+    "right": orbit_point(30, TRIANGLE_RADIUS),
+}
+
+
+def geometry_metadata() -> dict[str, Any]:
+    return {
+        "center_x": GEOMETRY_CENTER["x"],
+        "center_y": GEOMETRY_CENTER["y"],
+        "gate_orbit_radius": GATE_ORBIT_RADIUS,
+        "triangle_radius": TRIANGLE_RADIUS,
+        "core_radius": CORE_RADIUS,
+        "gate_node_radius": GATE_NODE_RADIUS,
+        "label_radius": LABEL_RADIUS,
+        "angle_step": ANGLE_STEP,
+        "start_angle": START_ANGLE,
+        "angle_direction": ANGLE_DIRECTION,
+        "triangle_vertices": {
+            key: {"x": value[0], "y": value[1]}
+            for key, value in TRIANGLE_VERTICES.items()
+        },
+    }
 
 
 def failed_gate(summary: dict[str, Any], wound: dict[str, Any]) -> int | None:

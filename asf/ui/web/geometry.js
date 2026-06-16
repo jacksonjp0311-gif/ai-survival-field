@@ -7,22 +7,60 @@ function svgEl(name, attrs = {}) {
 function drawGeometry(state) {
   const svg = document.getElementById("triad");
   svg.innerHTML = "";
-  svg.appendChild(svgEl("path", { class: "edge", d: "M520 74 L252 512 L788 512 Z" }));
-  svg.appendChild(svgEl("path", { class: "inner", d: "M520 220 L370 462 L670 462 Z" }));
-  svg.appendChild(svgEl("path", { class: "gate-path", d: gatePath(state.gates) }));
+  const geom = geometryModel();
   drawBackgroundRings(svg);
-  drawVertex(svg, 520, 82, "∿", "Evidence /", "Rehydration");
-  drawVertex(svg, 350, 468, "△", "Governance /", "Coherence");
-  drawVertex(svg, 690, 468, "↧", "Action /", "Recovery");
+  svg.appendChild(svgEl("circle", { class: "gate-orbit", cx: geom.cx, cy: geom.cy, r: geom.gateRadius }));
+  svg.appendChild(svgEl("path", { class: "edge", d: trianglePath(geom.triangle) }));
+  svg.appendChild(svgEl("path", { class: "inner", d: innerTrianglePath(geom) }));
+  drawVertex(svg, geom.triangle.top.x, geom.triangle.top.y, "∿", "Evidence /", "Rehydration");
+  drawVertex(svg, geom.triangle.left.x, geom.triangle.left.y, "△", "Governance /", "Coherence");
+  drawVertex(svg, geom.triangle.right.x, geom.triangle.right.y, "↧", "Action /", "Recovery");
   drawCore(svg);
   if (state.failed_gate_id) drawWoundLink(svg, state);
   for (const gate of state.gates) drawGate(svg, gate);
 }
 
+function geometryModel() {
+  const cx = 490;
+  const cy = 345;
+  const triangleRadius = 185;
+  return {
+    cx,
+    cy,
+    gateRadius: 245,
+    triangleRadius,
+    triangle: {
+      top: polar(cx, cy, -90, triangleRadius),
+      left: polar(cx, cy, 150, triangleRadius),
+      right: polar(cx, cy, 30, triangleRadius),
+    },
+  };
+}
+
+function polar(cx, cy, angle, radius) {
+  const theta = angle * Math.PI / 180;
+  return {
+    x: Math.round(cx + radius * Math.cos(theta)),
+    y: Math.round(cy + radius * Math.sin(theta)),
+  };
+}
+
+function trianglePath(triangle) {
+  return `M${triangle.top.x} ${triangle.top.y} L${triangle.left.x} ${triangle.left.y} L${triangle.right.x} ${triangle.right.y} Z`;
+}
+
+function innerTrianglePath(geom) {
+  const radius = 118;
+  const top = polar(geom.cx, geom.cy, -90, radius);
+  const left = polar(geom.cx, geom.cy, 150, radius);
+  const right = polar(geom.cx, geom.cy, 30, radius);
+  return `M${top.x} ${top.y} L${left.x} ${left.y} L${right.x} ${right.y} Z`;
+}
+
 function drawBackgroundRings(svg) {
-  for (const r of [142, 205, 268]) {
+  for (const r of [118, 185, 245, 287]) {
     svg.appendChild(svgEl("circle", {
-      cx: 520, cy: 360, r, fill: "none",
+      cx: 490, cy: 345, r, fill: "none",
       stroke: "rgba(77,220,255,0.08)", "stroke-width": 1,
     }));
   }
@@ -43,9 +81,9 @@ function drawVertex(svg, x, y, glyph, a, b) {
 }
 
 function drawCore(svg) {
-  svg.appendChild(svgEl("circle", { class: "core-circle", cx: 520, cy: 360, r: 62 }));
-  [["ASF-R", 340, 22], ["Runtime", 365, 20], ["Geometry", 390, 20], ["READ-ONLY", 418, 11]].forEach(([text, y, size]) => {
-    const node = svgEl("text", { x: 520, y, fill: text === "READ-ONLY" ? "#4ddcff" : "#f2fbff", "font-size": size, "text-anchor": "middle", "font-weight": "700" });
+  svg.appendChild(svgEl("circle", { class: "core-circle", cx: 490, cy: 345, r: 64 }));
+  [["ASF-R", 325, 22], ["Runtime", 350, 20], ["Geometry", 375, 20], ["READ-ONLY", 403, 11]].forEach(([text, y, size]) => {
+    const node = svgEl("text", { x: 490, y, fill: text === "READ-ONLY" ? "#4ddcff" : "#f2fbff", "font-size": size, "text-anchor": "middle", "font-weight": "700" });
     node.textContent = text;
     svg.appendChild(node);
   });
@@ -57,11 +95,18 @@ function drawGate(svg, gate) {
   const number = svgEl("text", { class: "gate-number", x: gate.x, y: gate.y + 4 });
   number.textContent = gate.gate_id;
   group.appendChild(number);
-  const label = svgEl("text", { class: "gate-label", x: gate.label_x, y: gate.label_y });
-  for (const [index, line] of splitLabel(gate.label).entries()) {
+  const label = svgEl("text", {
+    class: "gate-label",
+    x: gate.label_x,
+    y: gate.label_y,
+    "text-anchor": gate.label_anchor || "middle",
+  });
+  const lines = gate.label_lines || splitLabel(gate.label);
+  const startDy = lines.length > 1 ? -5 : 0;
+  for (const [index, line] of lines.entries()) {
     const tspan = svgEl("tspan", {
       x: gate.label_x,
-      dy: index === 0 ? 0 : 12,
+      dy: index === 0 ? startDy : 12,
     });
     tspan.textContent = line;
     label.appendChild(tspan);
@@ -112,13 +157,16 @@ function drawWoundLink(svg, state) {
   if (!gate) return;
   const startX = gate.x + 18;
   const startY = gate.y;
-  const midX = Math.max(startX + 78, 710);
+  const midX = 812;
   const endX = 1032;
-  const endY = 500;
+  const woundY = 486;
   svg.appendChild(svgEl("path", {
-    class: "wound-link",
-    d: `M${startX} ${startY} C${midX} ${startY}, ${midX + 76} ${endY}, ${endX} ${endY}`,
+    class: "circuit-trace",
+    d: `M${startX} ${startY} H${midX} Q${midX + 8} ${startY} ${midX + 8} ${startY + 8} V${woundY - 8} Q${midX + 8} ${woundY} ${midX + 16} ${woundY} H${endX}`,
   }));
+  for (const [x, y] of [[startX, startY], [midX + 8, Math.round((startY + woundY) / 2)], [endX, woundY]]) {
+    svg.appendChild(svgEl("circle", { class: "circuit-pad", cx: x, cy: y, r: 3.5 }));
+  }
 }
 
 function showGate(gate) {

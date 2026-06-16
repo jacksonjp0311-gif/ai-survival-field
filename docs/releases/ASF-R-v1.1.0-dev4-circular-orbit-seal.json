@@ -1,0 +1,25 @@
+{
+  "schema": "ASF-OBSERVABILITY-SEAL-v1.1.0-dev4",
+  "version": "ASF-R v1.1.0-dev4",
+  "implementation_commit": "pending_until_commit",
+  "capability": "circular_gate_orbit_circuit_trace_and_footer_polish",
+  "package_version": "1.1.0.dev4",
+  "test_count_minimum": 312,
+  "test_result": "local_pass",
+  "authority_expansion": false,
+  "mutation_enabled": "unchanged_from_v1_0_0",
+  "self_healing_mutation_enabled": false,
+  "enforce_full_enabled": false,
+  "ui_mode": "read_only_observe",
+  "gate_count": 25,
+  "status_card_count": 12,
+  "geometry_constraints": {
+    "gate_orbit": "single_shared_circle",
+    "triangle": "centered_inside_gate_orbit",
+    "wound_trace": "circuit_like_orthogonal_route",
+    "footer": "no_text_cutoff_at_1280x720"
+  },
+  "screenshot_path": "docs/assets/asf-r-triadic-geometry-console.png",
+  "proof": "ASF-R v1.1.0-dev4 refines the Triadic Geometry Console into a mathematically cleaner circular gate orbit with circuit-like wound routing, footer no-cutoff behavior, and preserved read-only observability without adding authorization, repair authority, wound closure, policy mutation, memory mutation, enforce_full, or general authority.",
+  "non_claim_lock": "The Triadic Geometry Console observes and illuminates the governed loop only. It does not prove truth, make AI safe, provide formal verification, provide production security, authorize autonomous action, or grant repair authority."
+}

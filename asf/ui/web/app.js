@@ -76,7 +76,10 @@ function renderCards(strip) {
     ["CI Evidence Status", strip.ci_evidence_status, "ok"],
     ["Non-Claim Lock", "preserved", "ok"],
   ];
-  document.getElementById("status-cards").innerHTML = cards.map(([label, value, status]) => `<div class="status-card ${status}"><label>${label}</label><strong>${value}</strong></div>`).join("");
+  document.getElementById("status-cards").innerHTML = cards.map(([label, value, status]) => {
+    const long = String(value || "").length > 18 ? "long" : "";
+    return `<div class="status-card ${status} ${long}"><label>${label}</label><strong>${value}</strong></div>`;
+  }).join("");
 }
 
 function short(value) {

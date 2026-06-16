@@ -84,7 +84,7 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
 
     def test_status_strip_contains_latest_version_and_ci(self):
         strip = build_geometry_state(ROOT, SAMPLE_SUMMARY).status_strip
-        self.assertEqual(strip["latest_version"], "ASF-R v1.1.0-dev3")
+        self.assertEqual(strip["latest_version"], "ASF-R v1.1.0-dev4")
         self.assertEqual(strip["ci_evidence_status"], "remote_pass")
 
     def test_legend_contains_neon_statuses(self):
@@ -210,7 +210,8 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
     def test_frontend_draws_wound_link(self):
         geometry = (ROOT / "asf" / "ui" / "web" / "geometry.js").read_text(encoding="utf-8")
         self.assertIn("drawWoundLink", geometry)
-        self.assertIn("wound-link", geometry)
+        self.assertIn("circuit-trace", geometry)
+        self.assertIn("circuit-pad", geometry)
 
     def test_geometry_server_exposes_state_json(self):
         server, thread, base = start_geometry_server()

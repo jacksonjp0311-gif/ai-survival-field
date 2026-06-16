@@ -52,21 +52,22 @@ class GeometryUIAlignmentTests(unittest.TestCase):
     def test_failed_gate_connector_renders(self):
         js = (ROOT / "asf" / "ui" / "web" / "geometry.js").read_text(encoding="utf-8")
         self.assertIn("drawWoundLink", js)
-        self.assertIn("wound-link", js)
-        self.assertIn("C${midX}", js)
+        self.assertIn("circuit-trace", js)
+        self.assertIn("circuit-pad", js)
+        self.assertIn("H${midX}", js)
 
-    def test_geometry_labels_have_explicit_arc_overrides(self):
+    def test_geometry_labels_have_computed_orbit_model(self):
         mapper = (ROOT / "asf" / "ui" / "geometry" / "gate_mapper.py").read_text(encoding="utf-8")
-        self.assertIn("LABEL_OVERRIDES", mapper)
-        self.assertIn("21: (710, 86)", mapper)
-        self.assertIn("25: (330, 96)", mapper)
+        self.assertIn("GEOMETRY_CENTER", mapper)
+        self.assertIn("GATE_ORBIT_RADIUS", mapper)
+        self.assertIn("gate_angle", mapper)
 
-    def test_dev3_release_seal_shape(self):
-        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.1.0-dev3-console-alignment-seal.json").read_text(encoding="utf-8"))
-        self.assertEqual(seal["schema"], "ASF-OBSERVABILITY-SEAL-v1.1.0-dev3")
+    def test_dev4_release_seal_shape(self):
+        seal = json.loads((ROOT / "docs" / "releases" / "ASF-R-v1.1.0-dev4-circular-orbit-seal.json").read_text(encoding="utf-8"))
+        self.assertEqual(seal["schema"], "ASF-OBSERVABILITY-SEAL-v1.1.0-dev4")
         self.assertFalse(seal["authority_expansion"])
         self.assertFalse(seal["enforce_full_enabled"])
-        self.assertIn("custom_scrollbars", seal["polish_targets"])
+        self.assertEqual(seal["geometry_constraints"]["gate_orbit"], "single_shared_circle")
 
 
 if __name__ == "__main__":

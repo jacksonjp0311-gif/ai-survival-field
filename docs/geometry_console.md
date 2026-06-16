@@ -7,9 +7,9 @@ It is not a control panel.
 
 v1.1.0-dev1 evolves the surface toward the product-grade target.
 
-v1.1.0-dev3 refines the screenshot-backed operator surface with darker palette tuning,
-custom scrollbars, cleaner footer rhythm, geometry label alignment, and right-column
-overflow polish:
+v1.1.0-dev4 refines the screenshot-backed operator surface with a mathematically
+constrained circular gate orbit, centered triangle geometry, circuit-like wound
+trace routing, and footer no-cutoff polish:
 
 - top header badges,
 - left gate legend,
