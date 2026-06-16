@@ -1,4 +1,4 @@
-# AI Survival Field Runtime
+﻿# AI Survival Field Runtime
 
 [![ASF Guard](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml/badge.svg)](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml)
 
@@ -59,6 +59,226 @@ Theory v1.4. The SFT repository remains the clean reference theory and
 experimental validator. ASF-R is a separate runtime line for enforcement
 adapters, evidence ledgers, wound packages, rehydration, RCC routing, and
 operator-visible geometry.
+
+
+<!-- ASF-R WHOLE LOOP BOX START -->
+
+## Run the Whole ASF-R Loop
+
+Use this box to run the full local governed loop with the read-only Triadic Geometry Console.
+
+This starts the geometry UI first, opens the browser, runs tests, runs the full governed loop, and prints the final runtime state.
+
+```text
+This does not grant authority.
+This does not mutate policy.
+This does not enable enforce_full.
+This does not authorize repair.
+This only runs the governed local loop and renders read-only observability.
+```
+
+### PowerShell
+
+```powershell
+cd "C:\Users\jacks\OneDrive\Desktop\ai-survival-field"
+
+$ErrorActionPreference = "Stop"
+$Root = (Get-Location).Path
+$env:PYTHONPATH = $Root
+
+$Port = 8765
+$Url = "http://127.0.0.1:$Port"
+$StateUrl = "$Url/state.json"
+$OpenUrl = "$Url/?v=$(Get-Date -Format yyyyMMddHHmmss)"
+
+Write-Host "[ASF] Installing editable package..."
+python -m pip install -e .
+
+Write-Host "[ASF] Running tests..."
+python -m unittest discover tests
+if ($LASTEXITCODE -ne 0) { throw "Tests failed. Full loop stopped." }
+
+Write-Host "[UI] Stopping old geometry UI jobs..."
+Get-Job | Where-Object {
+    $_.Name -eq "asf-geo-ui" -or
+    $_.Name -eq "asf-geo-ui-live" -or
+    $_.Name -eq "asf-ui" -or
+    $_.Name -like "asf-geometry-ui*"
+} | Stop-Job -ErrorAction SilentlyContinue
+
+Get-Job | Where-Object {
+    $_.Name -eq "asf-geo-ui" -or
+    $_.Name -eq "asf-geo-ui-live" -or
+    $_.Name -eq "asf-ui" -or
+    $_.Name -like "asf-geometry-ui*"
+} | Remove-Job -Force -ErrorAction SilentlyContinue
+
+Write-Host "[UI] Starting read-only Triadic Geometry Console..."
+$UiJob = Start-Job -Name "asf-geo-ui" -ScriptBlock {
+    param($Root)
+    Set-Location $Root
+    $env:PYTHONPATH = $Root
+    python -m asf.cli geometry serve
+} -ArgumentList $Root
+
+$Ready = $false
+for ($i = 1; $i -le 60; $i++) {
+    try {
+        $Response = Invoke-WebRequest -Uri $StateUrl -UseBasicParsing -TimeoutSec 2
+        if ($Response.StatusCode -ge 200 -and $Response.StatusCode -lt 300) {
+            $Ready = $true
+            break
+        }
+    } catch {
+        Start-Sleep -Milliseconds 500
+    }
+}
+
+if (-not $Ready) {
+    Write-Host "[UI] Server output:"
+    Receive-Job $UiJob -ErrorAction SilentlyContinue | Out-Host
+    throw "Geometry UI did not become ready at $StateUrl"
+}
+
+Write-Host "[UI] Opening browser: $OpenUrl"
+Start-Process -FilePath $OpenUrl
+
+Write-Host "[LOOP] Running full ASF-R governed loop with geometry..."
+python -m asf.cli full-loop run --geometry
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[WARN] CLI full-loop route failed. Trying module fallback..."
+    python -m asf.full_loop --root . --geometry
+}
+
+if ($LASTEXITCODE -ne 0) { throw "Full ASF-R loop failed." }
+
+Start-Sleep -Seconds 2
+
+Write-Host "[STATE] Final runtime state:"
+$State = Invoke-RestMethod -Uri $StateUrl -TimeoutSec 5
+Write-Host ("  panel:       {0}" -f $State.cli_panel.title)
+Write-Host ("  phase:       {0}" -f $State.cli_panel.phase)
+Write-Host ("  exit:        {0}" -f $State.cli_panel.exit_code)
+Write-Host ("  action:      {0}" -f $State.status_strip.current_action)
+Write-Host ("  decision:    {0}" -f $State.status_strip.decision)
+Write-Host ("  closure:     {0}" -f $State.status_strip.closure_status)
+Write-Host ("  ci evidence: {0}" -f $State.status_strip.ci_evidence_status)
+
+Write-Host ""
+Write-Host "[WOUND]"
+$State.wound_panel | ConvertTo-Json -Depth 10
+
+Write-Host ""
+Write-Host "[TRACE]"
+$State.trace | ConvertTo-Json -Depth 10
+
+Write-Host ""
+Write-Host "[DONE] Geometry UI remains open at $OpenUrl"
+Write-Host "[STOP] Stop the UI later with:"
+Write-Host ("Stop-Job {0}; Remove-Job {0} -Force" -f $UiJob.Id)
+```
+
+### Bash
+
+```bash
+cd ~/ai-survival-field
+
+set -euo pipefail
+
+export PYTHONPATH="$(pwd)"
+
+PORT="8765"
+URL="http://127.0.0.1:${PORT}"
+STATE_URL="${URL}/state.json"
+OPEN_URL="${URL}/?v=$(date +%Y%m%d%H%M%S)"
+
+echo "[ASF] Installing editable package..."
+python -m pip install -e .
+
+echo "[ASF] Running tests..."
+python -m unittest discover tests
+
+echo "[UI] Starting read-only Triadic Geometry Console..."
+python -m asf.cli geometry serve &
+UI_PID=$!
+
+READY=0
+for i in $(seq 1 60); do
+  if python - <<PY >/dev/null 2>&1
+import urllib.request
+urllib.request.urlopen("${STATE_URL}", timeout=2).read()
+PY
+  then
+    READY=1
+    break
+  fi
+  sleep 0.5
+done
+
+if [ "$READY" != "1" ]; then
+  echo "[FAIL] Geometry UI did not become ready at ${STATE_URL}"
+  exit 1
+fi
+
+echo "[UI] Opening browser: ${OPEN_URL}"
+python - <<PY
+import webbrowser
+webbrowser.open("${OPEN_URL}")
+PY
+
+echo "[LOOP] Running full ASF-R governed loop with geometry..."
+if ! python -m asf.cli full-loop run --geometry; then
+  echo "[WARN] CLI full-loop route failed. Trying module fallback..."
+  python -m asf.full_loop --root . --geometry
+fi
+
+sleep 2
+
+echo "[STATE] Final runtime state:"
+python - <<PY
+import json
+import urllib.request
+
+state = json.loads(urllib.request.urlopen("${STATE_URL}", timeout=5).read().decode("utf-8"))
+strip = state.get("status_strip", {})
+panel = state.get("cli_panel", {})
+
+print("  panel:      ", panel.get("title"))
+print("  phase:      ", panel.get("phase"))
+print("  exit:       ", panel.get("exit_code"))
+print("  action:     ", strip.get("current_action"))
+print("  decision:   ", strip.get("decision"))
+print("  closure:    ", strip.get("closure_status"))
+print("  ci evidence:", strip.get("ci_evidence_status"))
+
+print("")
+print("[WOUND]")
+print(json.dumps(state.get("wound_panel", {}), indent=2))
+
+print("")
+print("[TRACE]")
+print(json.dumps(state.get("trace", {}), indent=2))
+PY
+
+echo ""
+echo "[DONE] Geometry UI remains open at ${OPEN_URL}"
+echo "[STOP] Stop the UI later with: kill ${UI_PID}"
+```
+
+### Expected Result
+
+```text
+1. Editable package installs.
+2. Test suite passes.
+3. Read-only Triadic Geometry Console starts.
+4. Browser opens before the loop runs.
+5. Full governed ASF-R loop runs with geometry enabled.
+6. Final panel, decision, closure, wound, and trace state print to the terminal.
+7. Geometry UI remains open for inspection.
+```
+
+<!-- ASF-R WHOLE LOOP BOX END -->
 
 ## What This Version Proves
 
