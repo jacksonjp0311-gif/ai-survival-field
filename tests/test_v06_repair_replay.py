@@ -10,7 +10,7 @@ from asf.repair.repair_replay import replay_repair
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REMOTE_HEAD = "072065307bd6fbcda41f8e39c736bb6495a729d8"
+REMOTE_HEAD = "d21c35cc20cb2f340ebc4655b3289764f906fc40"
 
 
 def plan() -> RepairPlan:
