@@ -687,14 +687,16 @@ Runtime activation:
 PowerShell:
 
 ```powershell
-cd C:\Users\jacks\OneDrive\Desktop\ai-survival-field
+git clone https://github.com/jacksonjp0311-gif/ai-survival-field.git
+cd ai-survival-field
 .\scripts\run-asf-full-loop.ps1 -Geometry
 ```
 
 Bash:
 
 ```bash
-cd ~/ai-survival-field
+git clone https://github.com/jacksonjp0311-gif/ai-survival-field.git
+cd ai-survival-field
 ./scripts/run-asf-full-loop.sh --geometry
 ```
 
