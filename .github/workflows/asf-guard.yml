@@ -45,7 +45,7 @@ jobs:
           exit 0
 
       - name: Write CI evidence
-        run: python -m asf.cli ci evidence --commit "$GITHUB_SHA" --test-count 312 --status remote_pass --source github_actions > asf-ci-evidence.json
+        run: python -m asf.cli ci evidence --commit "$GITHUB_SHA" --test-count 316 --status remote_pass --source github_actions > asf-ci-evidence.json
 
       - name: Upload ASF evidence
         uses: actions/upload-artifact@v4

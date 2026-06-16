@@ -9,7 +9,7 @@ from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from asf.ui.geometry.app import GeometryHandler, geometry_events
-from asf.ui.geometry.gate_mapper import KNOWN_STATUSES, build_geometry_state, map_gates
+from asf.ui.geometry.gate_mapper import KNOWN_STATUSES, build_geometry_state, cli_panel, map_gates
 from asf.ui.geometry.schemas import NON_CLAIM_LOCK, READ_ONLY_UI_LAW
 
 
@@ -96,6 +96,28 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
         panel = build_geometry_state(ROOT, SAMPLE_SUMMARY).cli_panel
         self.assertEqual(panel["mode"], "read_only_observe")
         self.assertEqual(panel["command"], "python -m asf.cli dogfood run")
+        self.assertEqual(panel["title"], "LAST RUN TRACE")
+        self.assertEqual(panel["panel_state"], "last_run_trace")
+
+    def test_cli_panel_live_when_run_is_active(self):
+        panel = cli_panel({"phase": "running", "exit_code": None, "stream": ["active event"]})
+        self.assertEqual(panel["title"], "LIVE CLI RUN")
+        self.assertEqual(panel["panel_state"], "active_run")
+        self.assertTrue(panel["follow"])
+        self.assertEqual(panel["stream"], ["active event"])
+
+    def test_cli_panel_last_trace_when_run_is_complete(self):
+        panel = cli_panel({"phase": "complete", "exit_code": 0, "stream": ["final event"]})
+        self.assertEqual(panel["title"], "LAST RUN TRACE")
+        self.assertEqual(panel["panel_state"], "last_run_trace")
+        self.assertEqual(panel["stream"], ["final event"])
+
+    def test_cli_panel_waits_when_no_run_exists(self):
+        panel = cli_panel({})
+        self.assertEqual(panel["title"], "NO ACTIVE RUN")
+        self.assertEqual(panel["panel_state"], "no_active_run")
+        self.assertEqual(panel["phase"], "waiting")
+        self.assertIn("waiting", panel["stream"][0])
 
     def test_map_gates_marks_wound_emitted(self):
         gates = map_gates(ROOT, {"remote_url": "x", "remote_ci_status": "remote_pass", "non_claim_lock": "x"}, {"non_claim_lock": "x"}, SAMPLE_SUMMARY)
@@ -179,7 +201,8 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
 
     def test_ui_contains_live_cli_panel(self):
         html = (ROOT / "asf" / "ui" / "web" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("Live CLI Run", html)
+        self.assertIn("cli-panel-title", html)
+        self.assertIn("LIVE CLI RUN", html)
         self.assertIn("COMMAND (READ-ONLY)", html)
 
     def test_ui_contains_wound_package_panel(self):
@@ -219,6 +242,17 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
             with urlopen(base + "/state.json", timeout=5) as response:
                 data = json.loads(response.read().decode("utf-8"))
             self.assertEqual(data["schema"], "ASF-TRIADIC-GEOMETRY-STATE-v0.1")
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+
+    def test_geometry_server_serves_cache_busted_index(self):
+        server, thread, base = start_geometry_server()
+        try:
+            with urlopen(base + "/?v=test", timeout=5) as response:
+                html = response.read().decode("utf-8")
+            self.assertIn("ASF-R Triadic Geometry Console", html)
+            self.assertIn("cli-panel-title", html)
         finally:
             server.shutdown()
             thread.join(timeout=5)

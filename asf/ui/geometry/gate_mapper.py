@@ -219,27 +219,34 @@ def wound_panel(wound: dict[str, Any], decision: dict[str, Any]) -> dict[str, An
 
 
 def cli_panel(summary: dict[str, Any]) -> dict[str, Any]:
-    stream = summary.get("stream") or [
-        "12:34:10.128 [INIT] Runtime initialized (read-only)",
-        "12:34:10.246 [GATE 01] Latest Pointer Loaded ............... PASS",
-        "12:34:10.312 [GATE 02] Rehydration Passed .................. PASS",
-        "12:34:10.481 [GATE 07] Policy Loaded ....................... PASS",
-        "12:34:10.612 [GATE 11] Decision Computed ................... PASS",
-        "12:34:10.733 [GATE 12] Permission Checked .................. BLOCKED",
-        "12:34:10.734 [DECISION] Blocked by Permission Ceiling",
-        "12:34:10.735 [GATE 15] Wound Emitted ....................... PASS",
-        "12:34:11.492 [GATE 19] Repair Replay Passed ................ PASS",
-        "12:34:11.713 [GATE 24] Closure Validation Passed ............ PASS",
-        "12:34:11.822 [END] Full-loop run complete (observe only)",
-    ]
+    panel_state = cli_panel_state(summary)
+    titles = {
+        "active_run": "LIVE CLI RUN",
+        "last_run_trace": "LAST RUN TRACE",
+        "no_active_run": "NO ACTIVE RUN",
+    }
+    stream = summary.get("stream") or []
+    if panel_state == "no_active_run":
+        stream = ["waiting for full-loop run..."]
     return {
+        "title": titles[panel_state],
+        "panel_state": panel_state,
         "command": summary.get("command", "python -m asf.cli full-loop run --geometry"),
-        "phase": summary.get("phase", "inspection"),
+        "phase": summary.get("phase", "waiting" if panel_state == "no_active_run" else "complete"),
         "exit_code": summary.get("exit_code", "none"),
-        "follow": summary.get("follow", False),
+        "follow": summary.get("follow", panel_state == "active_run"),
         "mode": "read_only_observe",
         "stream": stream,
     }
+
+
+def cli_panel_state(summary: dict[str, Any]) -> str:
+    if not summary:
+        return "no_active_run"
+    exit_code = summary.get("exit_code")
+    if summary.get("phase") == "complete" or exit_code not in (None, "", "none"):
+        return "last_run_trace"
+    return "active_run"
 
 
 def gate_angle(gate_id: int) -> float:

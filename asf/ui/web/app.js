@@ -15,6 +15,8 @@ function renderState(state) {
 }
 
 function renderCli(panel) {
+  const panelTitle = document.getElementById("cli-panel-title");
+  if (panelTitle) panelTitle.textContent = panel.title || "LIVE CLI RUN";
   document.getElementById("command-line").textContent = `$ ${panel.command}`;
   document.getElementById("metric-phase").textContent = panel.phase;
   document.getElementById("metric-exit").textContent = `${panel.exit_code} (observe)`;
