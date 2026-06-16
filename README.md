@@ -1,4 +1,4 @@
-﻿# AI Survival Field Runtime
+# AI Survival Field Runtime
 
 [![ASF Guard](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml/badge.svg)](https://github.com/jacksonjp0311-gif/ai-survival-field/actions/workflows/asf-guard.yml)
 
@@ -61,13 +61,15 @@ adapters, evidence ledgers, wound packages, rehydration, RCC routing, and
 operator-visible geometry.
 
 
+
+
 <!-- ASF-R WHOLE LOOP BOX START -->
 
 ## Run the Whole ASF-R Loop
 
 Use this box to run the full local governed loop with the read-only Triadic Geometry Console.
 
-This starts the geometry UI first, opens the browser, runs tests, runs the full governed loop, and prints the final runtime state.
+This block works whether you are already inside the repository or starting from a parent directory. If the repository is not present, it clones it first.
 
 ```text
 This does not grant authority.
@@ -80,7 +82,19 @@ This only runs the governed local loop and renders read-only observability.
 ### PowerShell
 
 ```powershell
-cd "C:\Users\jacks\OneDrive\Desktop\ai-survival-field"
+$RepoUrl = "https://github.com/jacksonjp0311-gif/ai-survival-field.git"
+$RepoDir = "ai-survival-field"
+
+if ((Test-Path ".git") -and (Test-Path "asf")) {
+    Write-Host "[ASF] Already inside ASF-R repository."
+} else {
+    if (-not (Test-Path $RepoDir)) {
+        Write-Host "[ASF] Cloning ASF-R..."
+        git clone $RepoUrl $RepoDir
+    }
+
+    Set-Location $RepoDir
+}
 
 $ErrorActionPreference = "Stop"
 $Root = (Get-Location).Path
@@ -90,6 +104,8 @@ $Port = 8765
 $Url = "http://127.0.0.1:$Port"
 $StateUrl = "$Url/state.json"
 $OpenUrl = "$Url/?v=$(Get-Date -Format yyyyMMddHHmmss)"
+
+Write-Host "[ASF] Rehydrated repo root: $Root"
 
 Write-Host "[ASF] Installing editable package..."
 python -m pip install -e .
@@ -182,7 +198,19 @@ Write-Host ("Stop-Job {0}; Remove-Job {0} -Force" -f $UiJob.Id)
 ### Bash
 
 ```bash
-cd ~/ai-survival-field
+REPO_URL="https://github.com/jacksonjp0311-gif/ai-survival-field.git"
+REPO_DIR="ai-survival-field"
+
+if [ -d ".git" ] && [ -d "asf" ]; then
+  echo "[ASF] Already inside ASF-R repository."
+else
+  if [ ! -d "$REPO_DIR" ]; then
+    echo "[ASF] Cloning ASF-R..."
+    git clone "$REPO_URL" "$REPO_DIR"
+  fi
+
+  cd "$REPO_DIR"
+fi
 
 set -euo pipefail
 
@@ -192,6 +220,8 @@ PORT="8765"
 URL="http://127.0.0.1:${PORT}"
 STATE_URL="${URL}/state.json"
 OPEN_URL="${URL}/?v=$(date +%Y%m%d%H%M%S)"
+
+echo "[ASF] Rehydrated repo root: $(pwd)"
 
 echo "[ASF] Installing editable package..."
 python -m pip install -e .
@@ -269,13 +299,14 @@ echo "[STOP] Stop the UI later with: kill ${UI_PID}"
 ### Expected Result
 
 ```text
-1. Editable package installs.
-2. Test suite passes.
-3. Read-only Triadic Geometry Console starts.
-4. Browser opens before the loop runs.
-5. Full governed ASF-R loop runs with geometry enabled.
-6. Final panel, decision, closure, wound, and trace state print to the terminal.
-7. Geometry UI remains open for inspection.
+1. Repository is cloned if needed.
+2. Editable package installs.
+3. Test suite passes.
+4. Read-only Triadic Geometry Console starts.
+5. Browser opens before the loop runs.
+6. Full governed ASF-R loop runs with geometry enabled.
+7. Final panel, decision, closure, wound, and trace state print to the terminal.
+8. Geometry UI remains open for inspection.
 ```
 
 <!-- ASF-R WHOLE LOOP BOX END -->
