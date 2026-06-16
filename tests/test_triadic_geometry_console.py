@@ -222,6 +222,12 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
     def test_closed_wound_trace_is_archived_not_active(self):
         state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
         self.assertEqual(state.trace["mode"], "archived")
+        self.assertEqual(state.trace["display"], "collapsed")
+
+    def test_closed_wound_trace_display_collapsed(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        self.assertEqual(state.trace["mode"], "archived")
+        self.assertEqual(state.trace["display"], "collapsed")
 
     def test_open_wound_trace_is_active(self):
         summary = dict(SAMPLE_SUMMARY)
@@ -230,6 +236,32 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
         self.assertEqual(state.status_strip["closure_status"], "not closed")
         self.assertEqual(state.wound_panel["closure_status"], "not closed")
         self.assertEqual(state.trace["mode"], "active")
+        self.assertEqual(state.trace["display"], "full")
+
+    def test_active_wound_trace_display_full(self):
+        summary = dict(SAMPLE_SUMMARY)
+        summary.pop("closure_record")
+        state = build_geometry_state(ROOT, summary)
+        self.assertEqual(state.trace["display"], "full")
+
+    def test_no_wound_trace_display_none(self):
+        summary = dict(SAMPLE_SUMMARY)
+        summary.pop("wound_package")
+        state = build_geometry_state(ROOT, summary)
+        self.assertEqual(state.trace["display"], "none")
+        self.assertFalse(state.trace["visible"])
+
+    def test_archived_wound_panel_uses_archived_language(self):
+        panel = build_geometry_state(ROOT, SAMPLE_SUMMARY).wound_panel
+        self.assertEqual(panel["record_label"], "ARCHIVED WOUND RECORD")
+        self.assertEqual(panel["badge_label"], "ARCHIVED MISSING GATE CHECK")
+
+    def test_active_wound_panel_uses_blocked_language(self):
+        summary = dict(SAMPLE_SUMMARY)
+        summary.pop("closure_record")
+        panel = build_geometry_state(ROOT, summary).wound_panel
+        self.assertEqual(panel["record_label"], "WOUND PACKAGE")
+        self.assertEqual(panel["badge_label"], "")
 
     def test_gate_22_25_labels_have_top_band_offsets(self):
         state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
@@ -284,6 +316,29 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
         self.assertIn("drawWoundLink", geometry)
         self.assertIn("circuit-trace", geometry)
         self.assertIn("circuit-pad", geometry)
+
+    def test_archived_trace_does_not_render_long_circuit_path(self):
+        geometry = (ROOT / "asf" / "ui" / "web" / "geometry.js").read_text(encoding="utf-8")
+        self.assertIn('trace.display === "full"', geometry)
+        self.assertIn("drawArchivedWoundMarker", geometry)
+
+    def test_archived_trace_does_not_render_bright_circuit_pads(self):
+        geometry = (ROOT / "asf" / "ui" / "web" / "geometry.js").read_text(encoding="utf-8")
+        archived_branch = geometry.split("function drawArchivedWoundMarker", 1)[1]
+        self.assertNotIn("circuit-pad", archived_branch)
+
+    def test_missing_gate_source_label_hidden_when_archived(self):
+        geometry = (ROOT / "asf" / "ui" / "web" / "geometry.js").read_text(encoding="utf-8")
+        self.assertIn('if (mode !== "archived")', geometry)
+
+    def test_eventsource_does_not_append_cli_lines_in_last_run_trace_mode(self):
+        app = (ROOT / "asf" / "ui" / "web" / "app.js").read_text(encoding="utf-8")
+        self.assertIn('latestState.cli_panel?.panel_state !== "active_run"', app)
+
+    def test_eventsource_appends_cli_lines_only_in_active_run_mode(self):
+        app = (ROOT / "asf" / "ui" / "web" / "app.js").read_text(encoding="utf-8")
+        self.assertIn('panel_state !== "active_run"', app)
+        self.assertIn("appendChild(row)", app)
 
     def test_geometry_server_exposes_state_json(self):
         server, thread, base = start_geometry_server()

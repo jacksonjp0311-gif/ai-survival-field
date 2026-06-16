@@ -16,7 +16,8 @@ function drawGeometry(state) {
   drawVertex(svg, geom.triangle.left.x, geom.triangle.left.y, "△", "Governance /", "Coherence");
   drawVertex(svg, geom.triangle.right.x, geom.triangle.right.y, "↧", "Action /", "Recovery");
   drawCore(svg);
-  if (state.trace && state.trace.visible) drawWoundLink(svg, state);
+  if (state.trace && state.trace.visible && state.trace.display === "full") drawWoundLink(svg, state);
+  if (state.trace && state.trace.visible && state.trace.display === "collapsed") drawArchivedWoundMarker(svg, state);
   for (const gate of state.gates) drawGate(svg, gate);
 }
 
@@ -185,9 +186,29 @@ function drawWoundLink(svg, state) {
 function drawWoundSourceNode(svg, source, mode = "active") {
   const group = svgEl("g", { class: `wound-source-node ${mode}` });
   group.appendChild(svgEl("circle", { cx: source.x, cy: source.y, r: 9 }));
-  const label = svgEl("text", { x: source.x + 14, y: source.y + 4, "text-anchor": "start" });
-  label.textContent = source.label || "Wound Source";
-  group.appendChild(label);
+  if (mode !== "archived") {
+    const label = svgEl("text", { x: source.x + 14, y: source.y - 8, "text-anchor": "start" });
+    label.textContent = source.label || "Wound Source";
+    group.appendChild(label);
+  }
+  const title = svgEl("title");
+  title.textContent = `${mode === "archived" ? "Archived wound" : "Wound source"}: ${source.label || "Wound Source"}`;
+  group.appendChild(title);
+  svg.appendChild(group);
+}
+
+function drawArchivedWoundMarker(svg, state) {
+  const source = state.wound_source_node || { x: 760, y: 474, label: "Wound Source" };
+  const markerX = 815;
+  const markerY = 486;
+  const group = svgEl("g", { class: "archived-wound-marker" });
+  group.appendChild(svgEl("path", {
+    d: `M${source.x} ${source.y} C${source.x + 22} ${source.y} ${markerX - 28} ${markerY} ${markerX} ${markerY}`,
+  }));
+  group.appendChild(svgEl("circle", { cx: markerX, cy: markerY, r: 7 }));
+  const title = svgEl("title");
+  title.textContent = `Archived wound: ${state.wound_panel?.failed_gate || source.label || "Wound Source"}`;
+  group.appendChild(title);
   svg.appendChild(group);
 }
 

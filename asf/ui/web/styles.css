@@ -194,8 +194,16 @@ code {
     linear-gradient(180deg, rgba(26, 8, 14, 0.84), rgba(14, 7, 10, 0.92));
   box-shadow: 0 0 18px rgba(255, 59, 95, 0.15), inset 0 0 20px rgba(139, 16, 36, 0.13);
 }
+.wound-panel.archived {
+  border-color: rgba(139, 96, 108, 0.58);
+  background:
+    linear-gradient(180deg, rgba(19, 13, 17, 0.88), rgba(11, 9, 13, 0.94));
+  box-shadow: 0 0 10px rgba(255, 59, 95, 0.06), inset 0 0 16px rgba(139, 16, 36, 0.07);
+}
 .wound-head h2 { color: var(--asf-red); font-size: 18px; }
 .wound-head span { color: #ffd7de; border-color: rgba(255, 59, 95, 0.5); }
+.wound-panel.archived .wound-head h2 { color: #c48794; }
+.wound-panel.archived .wound-head span { color: #d6a4ae; border-color: rgba(196, 135, 148, 0.36); }
 .wound-fields {
   display: grid;
   grid-template-columns: 128px 1fr;
@@ -212,6 +220,7 @@ code {
 .wound-fields b { color: #ffd4dc; font-weight: 600; }
 .wound-fields span { color: #f0f7ff; overflow-wrap: anywhere; }
 .wound-fields .hot { color: var(--asf-red); text-transform: uppercase; font-weight: 700; }
+.wound-panel.archived .wound-fields .hot { color: #c48794; }
 
 .status-cards {
   display: grid;
@@ -270,6 +279,8 @@ code {
 .wound-source-node circle { fill: rgba(255, 59, 95, 0.18); stroke: var(--asf-red); stroke-width: 1.8px; filter: drop-shadow(0 0 7px rgba(255, 59, 95, 0.7)); }
 .wound-source-node text { fill: var(--asf-red); font-size: 10px; font-weight: 700; paint-order: stroke; stroke: rgba(5, 10, 18, 0.8); stroke-width: 3px; stroke-linejoin: round; }
 .wound-source-node.archived { opacity: 0.48; }
+.archived-wound-marker path { fill: none; stroke: rgba(255, 59, 95, 0.32); stroke-width: 1px; stroke-dasharray: 3 5; }
+.archived-wound-marker circle { fill: rgba(139, 16, 36, 0.32); stroke: rgba(255, 59, 95, 0.52); stroke-width: 1.4px; filter: drop-shadow(0 0 3px rgba(255, 59, 95, 0.25)); }
 .wound-link { stroke: rgba(255, 59, 95, 0.75); stroke-width: 2; fill: none; filter: drop-shadow(0 0 6px var(--asf-red)); animation: pulse-red 1.9s infinite; }
 .core-circle { fill: rgba(11, 19, 32, 0.93); stroke: rgba(86, 216, 255, 0.72); stroke-width: 2; filter: drop-shadow(0 0 13px rgba(86, 216, 255, 0.72)); }
 .vertex-core { fill: rgba(11, 19, 32, 0.93); stroke: rgba(86, 216, 255, 0.82); stroke-width: 2; filter: drop-shadow(0 0 11px rgba(86, 216, 255, 0.78)); }

@@ -216,6 +216,8 @@ def wound_panel(wound: dict[str, Any], decision: dict[str, Any], closure_status:
     failed_gate_id = failed_gate_from_source(wound, decision)
     return {
         "status": "blocked",
+        "record_label": "ARCHIVED WOUND RECORD" if closure_status == "closed" else "WOUND PACKAGE",
+        "badge_label": "ARCHIVED MISSING GATE CHECK" if closure_status == "closed" and source == "missing_gate" else "",
         "wound_id": wound.get("wound_id", "unknown"),
         "failed_gate": "Missing Gate Check" if source == "missing_gate" else wound.get("failed_gate", "Runtime Gate"),
         "failed_gate_id": failed_gate_id,
@@ -366,14 +368,17 @@ def resolve_closure_status(summary: dict[str, Any], wound: dict[str, Any], closu
 
 def trace_state(gates: list[GeometryGate], panel: dict[str, Any], closure_status: str) -> dict[str, Any]:
     if panel.get("status") != "blocked":
-        return {"visible": False, "mode": "hidden", "source": "none", "failed_gate_id": None}
+        return {"visible": False, "mode": "hidden", "display": "none", "source": "none", "failed_gate_id": None}
+    mode = "archived" if closure_status == "closed" else "active"
+    display = "collapsed" if mode == "archived" else "full"
     real_gate_id = panel.get("failed_gate_id")
     if real_gate_id is not None:
         gate = next((item for item in gates if item.gate_id == real_gate_id), None)
         if gate and gate.failed:
             return {
                 "visible": True,
-                "mode": "archived" if closure_status == "closed" else "active",
+                "mode": mode,
+                "display": display,
                 "source": "failed_gate",
                 "failed_gate_id": real_gate_id,
                 "wound_source_node": None,
@@ -381,7 +386,8 @@ def trace_state(gates: list[GeometryGate], panel: dict[str, Any], closure_status
     node = synthetic_wound_source_node(panel.get("wound_source", "generic_wound"))
     return {
         "visible": True,
-        "mode": "archived" if closure_status == "closed" else "active",
+        "mode": mode,
+        "display": display,
         "source": "synthetic_wound_source",
         "failed_gate_id": None,
         "wound_source_node": node,

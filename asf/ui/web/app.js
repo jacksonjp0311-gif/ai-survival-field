@@ -42,10 +42,14 @@ function statusFromLine(line) {
 function renderWound(panel) {
   const box = document.getElementById("wound-panel");
   const gate = document.getElementById("wound-gate");
+  const heading = box.querySelector("h2");
   const fields = document.getElementById("wound-fields");
   box.classList.toggle("blocked", panel.status === "blocked");
+  box.classList.toggle("archived", panel.closure_status === "closed");
+  if (heading) heading.textContent = panel.record_label || (panel.closure_status === "closed" ? "ARCHIVED WOUND RECORD" : "WOUND PACKAGE");
   const gateLabel = panel.failed_gate_id ? `GATE ${panel.failed_gate_id}` : String(panel.failed_gate || "WOUND SOURCE").toUpperCase();
-  gate.textContent = panel.status === "blocked" ? `BLOCKED AT ${gateLabel}` : "NO ACTIVE WOUND";
+  const defaultBadge = panel.closure_status === "closed" ? `ARCHIVED ${gateLabel}` : `BLOCKED AT ${gateLabel}`;
+  gate.textContent = panel.status === "blocked" ? (panel.badge_label || defaultBadge) : "NO ACTIVE WOUND";
   if (panel.message) {
     fields.innerHTML = `<b>Status</b><span>${panel.message}</span>`;
     return;
@@ -95,6 +99,7 @@ function connectEvents() {
   const source = new EventSource("/events");
   source.addEventListener("cli_line", event => {
     const payload = JSON.parse(event.data);
+    if (!latestState || latestState.cli_panel?.panel_state !== "active_run" || payload.mode === "replay") return;
     const stream = document.getElementById("cli-stream");
     const row = document.createElement("div");
     row.className = `stream-line ${statusFromLine(payload.message)}`;

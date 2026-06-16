@@ -151,7 +151,7 @@ class V10PackagingTests(unittest.TestCase):
 
     def test_workflow_ci_evidence_uses_release_candidate_test_count(self):
         workflow = (ROOT / ".github" / "workflows" / "asf-guard.yml").read_text(encoding="utf-8")
-        self.assertIn("--test-count 325", workflow)
+        self.assertIn("--test-count 335", workflow)
 
 
 if __name__ == "__main__":
