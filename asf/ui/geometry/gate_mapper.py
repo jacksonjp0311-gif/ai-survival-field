@@ -101,6 +101,9 @@ def build_geometry_state(root: str | Path = ".", run_summary: dict[str, Any] | N
     wound = summary.get("wound_package") or summary.get("wound") or {}
     decision = summary.get("decision") or {}
     closure = summary.get("closure_record") or {}
+    closure_status = resolve_closure_status(summary, wound, closure)
+    panel = wound_panel(wound, decision, closure_status)
+    trace = trace_state(gates, panel, closure_status)
     status_strip = {
         "latest_version": pointer.get("latest_version", "unknown"),
         "latest_commit": pointer.get("latest_commit", "unknown"),
@@ -111,11 +114,10 @@ def build_geometry_state(root: str | Path = ".", run_summary: dict[str, Any] | N
         "permission_ceiling": decision.get("permission_ceiling", summary.get("permission_ceiling", "unknown")),
         "wound_id": wound.get("wound_id", "none"),
         "authorization_receipt_id": summary.get("authorization_receipt", {}).get("authorization_receipt_id", "none"),
-        "closure_status": "closed" if closure.get("wound_closed") else "not_closed",
+        "closure_status": closure_status,
         "ci_evidence_status": pointer.get("remote_ci_status", "unknown"),
         "non_claim_lock": pointer.get("non_claim_lock", NON_CLAIM_LOCK),
     }
-    failed_gate_id = failed_gate(summary, wound)
     return GeometryState(
         schema="ASF-TRIADIC-GEOMETRY-STATE-v0.1",
         console_name="ASF-R Triadic Geometry Console",
@@ -124,12 +126,14 @@ def build_geometry_state(root: str | Path = ".", run_summary: dict[str, Any] | N
         geometry=geometry_metadata(),
         legend=LEGEND,
         gates=[gate.as_dict() for gate in gates],
-        wound_panel=wound_panel(wound, decision),
+        wound_panel=panel,
         status_strip=status_strip,
         cli_panel=cli_panel(summary),
         read_only_law=READ_ONLY_UI_LAW,
         non_claim_lock=NON_CLAIM_LOCK,
-        failed_gate_id=failed_gate_id,
+        failed_gate_id=trace.get("failed_gate_id"),
+        wound_source_node=trace.get("wound_source_node"),
+        trace=trace,
         events_endpoint="/events",
     )
 
@@ -162,7 +166,11 @@ def map_gates(root: Path, pointer: dict[str, Any], seal: dict[str, Any], summary
         24: bool(summary.get("closure_validation_passed")),
         25: bool(summary.get("closure_record")),
     }
+    wound = summary.get("wound_package") or summary.get("wound") or {}
+    decision = summary.get("decision") or {}
     failed = set(summary.get("failed_gates", []))
+    if wound_source(wound, decision) == "missing_gate":
+        failed.discard(12)
     forbidden = set(summary.get("forbidden_gates", []))
     gates: list[GeometryGate] = []
     for gate_id, label, sector, pass_condition in GATE_DEFINITIONS:
@@ -178,8 +186,9 @@ def map_gates(root: Path, pointer: dict[str, Any], seal: dict[str, Any], summary
             status = "inactive"
         angle = gate_angle(gate_id)
         x, y = orbit_point(angle, GATE_ORBIT_RADIUS)
-        label_x, label_y = label_point(angle)
+        label_x, label_y = label_point(angle, gate_id)
         anchor = label_anchor(angle)
+        real_failed_gate_id = failed_gate(summary, summary.get("wound_package") or summary.get("wound") or {}, summary.get("decision") or {})
         gates.append(GeometryGate(
             gate_id,
             label,
@@ -194,27 +203,32 @@ def map_gates(root: Path, pointer: dict[str, Any], seal: dict[str, Any], summary
             label_anchor=anchor,
             label_lines=LABEL_LINES.get(label, [label]),
             failed=status in {"blocked", "fail"},
-            wound_linked=gate_id == failed_gate(summary, summary.get("wound_package") or summary.get("wound") or {}),
+            wound_linked=gate_id == real_failed_gate_id and status in {"blocked", "fail"},
         ))
     return gates
 
 
-def wound_panel(wound: dict[str, Any], decision: dict[str, Any]) -> dict[str, Any]:
+def wound_panel(wound: dict[str, Any], decision: dict[str, Any], closure_status: str | None = None) -> dict[str, Any]:
     if not wound:
         return {"status": "read_only", "message": "NO ACTIVE WOUND"}
+    failure_class = wound.get("wound_class", decision.get("status", "unknown"))
+    source = wound_source(wound, decision)
+    failed_gate_id = failed_gate_from_source(wound, decision)
     return {
         "status": "blocked",
         "wound_id": wound.get("wound_id", "unknown"),
-        "failed_gate": "Missing Gate Check",
-        "failed_gate_id": 12,
-        "failure_class": wound.get("wound_class", decision.get("status", "unknown")),
+        "failed_gate": "Missing Gate Check" if source == "missing_gate" else wound.get("failed_gate", "Runtime Gate"),
+        "failed_gate_id": failed_gate_id,
+        "failure_class": failure_class,
         "decision": decision.get("status", "blocked"),
+        "wound_source": source,
+        "trace_source": "synthetic_wound_source" if failed_gate_id is None else "failed_gate",
         "permission_ceiling": decision.get("permission_ceiling", "unknown"),
         "blocked_actions": decision.get("blocked_actions", wound.get("blocked_actions", [])),
         "permitted_actions": decision.get("permitted_actions", wound.get("permitted_actions", [])),
         "recommended_repair_path": wound.get("next_admissible_action", decision.get("next_admissible_action", "request_evidence")),
         "repair_plan_status": "available",
-        "closure_status": "not closed",
+        "closure_status": closure_status or "not closed",
     }
 
 
@@ -270,14 +284,22 @@ def label_anchor(angle_deg: float) -> str:
     return "middle"
 
 
-def label_point(angle_deg: float) -> tuple[int, int]:
+def label_point(angle_deg: float, gate_id: int | None = None) -> tuple[int, int]:
+    normalized = normalize_angle(angle_deg)
     sine = math.sin(math.radians(angle_deg))
     radius = LABEL_RADIUS
-    if sine < -0.85:
-        radius = LABEL_RADIUS + 38
+    y_offset = 0
+    if -125 <= normalized <= -55:
+        radius = GATE_ORBIT_RADIUS + 72
+        y_offset = -10 if (gate_id or 0) % 2 else -24
     elif sine < -0.65:
-        radius = LABEL_RADIUS + 22
-    return orbit_point(angle_deg, radius)
+        radius = LABEL_RADIUS + 26
+    x, y = orbit_point(angle_deg, radius)
+    return x, y + y_offset
+
+
+def normalize_angle(angle_deg: float) -> float:
+    return ((angle_deg + 180) % 360) - 180
 
 
 TRIANGLE_VERTICES = {
@@ -306,8 +328,73 @@ def geometry_metadata() -> dict[str, Any]:
     }
 
 
-def failed_gate(summary: dict[str, Any], wound: dict[str, Any]) -> int | None:
+def failed_gate(summary: dict[str, Any], wound: dict[str, Any], decision: dict[str, Any] | None = None) -> int | None:
+    decision = decision or {}
     if wound:
-        return int(wound.get("failed_gate_id") or 12)
+        if wound_source(wound, decision) == "missing_gate":
+            return None
+        gate_id = wound.get("failed_gate_id")
+        return int(gate_id) if gate_id else None
     failed = summary.get("failed_gates") or []
     return int(failed[0]) if failed else None
+
+
+def wound_source(wound: dict[str, Any], decision: dict[str, Any]) -> str:
+    status = decision.get("status") or wound.get("wound_class") or ""
+    if status == "missing_gate_failed" or wound.get("wound_class") == "missing_gate_failed":
+        return "missing_gate"
+    if wound.get("failed_gate_id"):
+        return "gate"
+    return "generic_wound"
+
+
+def failed_gate_from_source(wound: dict[str, Any], decision: dict[str, Any]) -> int | None:
+    source = wound_source(wound, decision)
+    if source == "missing_gate":
+        return None
+    gate_id = wound.get("failed_gate_id")
+    return int(gate_id) if gate_id else None
+
+
+def resolve_closure_status(summary: dict[str, Any], wound: dict[str, Any], closure_record: dict[str, Any]) -> str:
+    if closure_record and closure_record.get("wound_closed") is True:
+        return "closed"
+    if wound:
+        return "not closed"
+    return "none"
+
+
+def trace_state(gates: list[GeometryGate], panel: dict[str, Any], closure_status: str) -> dict[str, Any]:
+    if panel.get("status") != "blocked":
+        return {"visible": False, "mode": "hidden", "source": "none", "failed_gate_id": None}
+    real_gate_id = panel.get("failed_gate_id")
+    if real_gate_id is not None:
+        gate = next((item for item in gates if item.gate_id == real_gate_id), None)
+        if gate and gate.failed:
+            return {
+                "visible": True,
+                "mode": "archived" if closure_status == "closed" else "active",
+                "source": "failed_gate",
+                "failed_gate_id": real_gate_id,
+                "wound_source_node": None,
+            }
+    node = synthetic_wound_source_node(panel.get("wound_source", "generic_wound"))
+    return {
+        "visible": True,
+        "mode": "archived" if closure_status == "closed" else "active",
+        "source": "synthetic_wound_source",
+        "failed_gate_id": None,
+        "wound_source_node": node,
+    }
+
+
+def synthetic_wound_source_node(source: str) -> dict[str, Any]:
+    label = "Missing Gate" if source == "missing_gate" else "Wound Source"
+    return {
+        "id": f"{source}_source",
+        "label": label,
+        "status": "blocked",
+        "x": 760,
+        "y": 474,
+        "visible": True,
+    }

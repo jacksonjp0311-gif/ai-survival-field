@@ -16,7 +16,7 @@ function drawGeometry(state) {
   drawVertex(svg, geom.triangle.left.x, geom.triangle.left.y, "△", "Governance /", "Coherence");
   drawVertex(svg, geom.triangle.right.x, geom.triangle.right.y, "↧", "Action /", "Recovery");
   drawCore(svg);
-  if (state.failed_gate_id) drawWoundLink(svg, state);
+  if (state.trace && state.trace.visible) drawWoundLink(svg, state);
   for (const gate of state.gates) drawGate(svg, gate);
 }
 
@@ -71,10 +71,12 @@ function drawVertex(svg, x, y, glyph, a, b) {
   const g = svgEl("text", { x, y: y + 9, fill: "#e8fbff", "font-size": 28, "text-anchor": "middle" });
   g.textContent = glyph;
   svg.appendChild(g);
-  const labelOffset = y < 120 ? 64 : 54;
-  const t1 = svgEl("text", { x, y: y - labelOffset, fill: "#e8fbff", "font-size": 16, "text-anchor": "middle", "font-weight": "700" });
+  const isTop = y < 220;
+  const labelY = isTop ? y + 50 : y - 54;
+  const labelSize = isTop ? 14 : 16;
+  const t1 = svgEl("text", { x, y: labelY, fill: "#e8fbff", "font-size": labelSize, "text-anchor": "middle", "font-weight": "700" });
   t1.textContent = a;
-  const t2 = svgEl("text", { x, y: y - labelOffset + 20, fill: "#e8fbff", "font-size": 16, "text-anchor": "middle", "font-weight": "700" });
+  const t2 = svgEl("text", { x, y: labelY + 18, fill: "#e8fbff", "font-size": labelSize, "text-anchor": "middle", "font-weight": "700" });
   t2.textContent = b;
   svg.appendChild(t1);
   svg.appendChild(t2);
@@ -153,20 +155,40 @@ function gatePath(gates) {
 }
 
 function drawWoundLink(svg, state) {
-  const gate = state.gates.find(item => item.gate_id === state.failed_gate_id);
-  if (!gate) return;
-  const startX = gate.x + 18;
-  const startY = gate.y;
+  const trace = state.trace || {};
+  let startX;
+  let startY;
+  if (trace.source === "failed_gate" && state.failed_gate_id) {
+    const gate = state.gates.find(item => item.gate_id === state.failed_gate_id && item.failed);
+    if (!gate) return;
+    startX = gate.x + 18;
+    startY = gate.y;
+  } else {
+    const source = state.wound_source_node;
+    if (!source || !source.visible) return;
+    drawWoundSourceNode(svg, source, trace.mode);
+    startX = source.x + 10;
+    startY = source.y;
+  }
   const midX = 812;
   const endX = 1032;
   const woundY = 486;
   svg.appendChild(svgEl("path", {
-    class: "circuit-trace",
+    class: `circuit-trace ${trace.mode || "active"}`,
     d: `M${startX} ${startY} H${midX} Q${midX + 8} ${startY} ${midX + 8} ${startY + 8} V${woundY - 8} Q${midX + 8} ${woundY} ${midX + 16} ${woundY} H${endX}`,
   }));
   for (const [x, y] of [[startX, startY], [midX + 8, Math.round((startY + woundY) / 2)], [endX, woundY]]) {
     svg.appendChild(svgEl("circle", { class: "circuit-pad", cx: x, cy: y, r: 3.5 }));
   }
+}
+
+function drawWoundSourceNode(svg, source, mode = "active") {
+  const group = svgEl("g", { class: `wound-source-node ${mode}` });
+  group.appendChild(svgEl("circle", { cx: source.x, cy: source.y, r: 9 }));
+  const label = svgEl("text", { x: source.x + 14, y: source.y + 4, "text-anchor": "start" });
+  label.textContent = source.label || "Wound Source";
+  group.appendChild(label);
+  svg.appendChild(group);
 }
 
 function showGate(gate) {

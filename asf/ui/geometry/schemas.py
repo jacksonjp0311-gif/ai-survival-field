@@ -63,6 +63,8 @@ class GeometryState:
     read_only_law: list[str]
     non_claim_lock: str
     failed_gate_id: int | None = None
+    wound_source_node: dict[str, Any] | None = None
+    trace: dict[str, Any] | None = None
     events_endpoint: str = "/events"
 
     def as_dict(self) -> dict[str, Any]:

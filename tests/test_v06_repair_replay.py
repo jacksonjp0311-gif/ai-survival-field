@@ -10,7 +10,7 @@ from asf.repair.repair_replay import replay_repair
 
 
 ROOT = Path(__file__).resolve().parents[1]
-REMOTE_HEAD = "d21c35cc20cb2f340ebc4655b3289764f906fc40"
+REMOTE_HEAD = "d21c35c64020e61ab553d31d47ea60b48498fd75"
 
 
 def plan() -> RepairPlan:
@@ -64,6 +64,11 @@ class RepairReplayV06Tests(unittest.TestCase):
         pointer = load_latest_pointer(ROOT / "docs" / "context" / "latest-asf.json")
         result = validate_latest_pointer(pointer, observed_commit=REMOTE_HEAD)
         self.assertTrue(result["ok"], result["failures"])
+
+    def test_latest_pointer_sha_is_real_commit(self):
+        pointer = load_latest_pointer(ROOT / "docs" / "context" / "latest-asf.json")
+        self.assertEqual(pointer["latest_commit"], REMOTE_HEAD)
+        self.assertEqual(len(pointer["latest_commit"]), 40)
 
     def test_latest_pointer_alignment_detects_pending(self):
         pointer = load_latest_pointer(ROOT / "docs" / "context" / "latest-asf.json")

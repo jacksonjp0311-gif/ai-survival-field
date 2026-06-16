@@ -44,16 +44,18 @@ function renderWound(panel) {
   const gate = document.getElementById("wound-gate");
   const fields = document.getElementById("wound-fields");
   box.classList.toggle("blocked", panel.status === "blocked");
-  gate.textContent = panel.status === "blocked" ? `BLOCKED AT GATE ${panel.failed_gate_id || 12}` : "NO ACTIVE WOUND";
+  const gateLabel = panel.failed_gate_id ? `GATE ${panel.failed_gate_id}` : String(panel.failed_gate || "WOUND SOURCE").toUpperCase();
+  gate.textContent = panel.status === "blocked" ? `BLOCKED AT ${gateLabel}` : "NO ACTIVE WOUND";
   if (panel.message) {
     fields.innerHTML = `<b>Status</b><span>${panel.message}</span>`;
     return;
   }
   const rows = [
     ["Wound ID", panel.wound_id],
-    ["Failed Gate", `${panel.failed_gate_id || 12} ${panel.failed_gate || "Permission Checked"}`],
+    ["Failed Gate", panel.failed_gate_id ? `${panel.failed_gate_id} ${panel.failed_gate || "Runtime Gate"}` : panel.failed_gate],
     ["Failure Class", panel.failure_class],
     ["Decision", panel.decision],
+    ["Wound Source", panel.wound_source || "unknown"],
     ["Permission Ceiling", panel.permission_ceiling],
     ["Blocked Actions", (panel.blocked_actions || []).join(", ")],
     ["Permitted Actions", (panel.permitted_actions || []).join(", ")],

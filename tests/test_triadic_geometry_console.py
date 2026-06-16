@@ -75,6 +75,8 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
         panel = build_geometry_state(ROOT, SAMPLE_SUMMARY).wound_panel
         self.assertEqual(panel["status"], "blocked")
         self.assertEqual(panel["wound_id"], "ASF-WOUND-fde7366bae78")
+        self.assertEqual(panel["wound_source"], "missing_gate")
+        self.assertIsNone(panel["failed_gate_id"])
 
     def test_wound_panel_no_active_wound_without_wound(self):
         summary = dict(SAMPLE_SUMMARY)
@@ -190,8 +192,55 @@ class TriadicGeometryConsoleTests(unittest.TestCase):
 
     def test_geometry_failed_gate_maps_to_wound_panel(self):
         state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
-        self.assertEqual(state.failed_gate_id, 12)
-        self.assertEqual(state.wound_panel["failed_gate_id"], 12)
+        self.assertIsNone(state.failed_gate_id)
+        self.assertIsNone(state.wound_panel["failed_gate_id"])
+        self.assertEqual(state.wound_panel["trace_source"], "synthetic_wound_source")
+
+    def test_gate_12_pass_when_missing_gate_failed(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        gate = next(item for item in state.gates if item["gate_id"] == 12)
+        self.assertEqual(gate["status"], "pass")
+        self.assertFalse(gate["failed"])
+        self.assertFalse(gate["wound_linked"])
+
+    def test_missing_gate_failed_uses_synthetic_wound_source(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        self.assertEqual(state.wound_panel["wound_source"], "missing_gate")
+        self.assertEqual(state.trace["source"], "synthetic_wound_source")
+        self.assertEqual(state.wound_source_node["id"], "missing_gate_source")
+
+    def test_wound_trace_does_not_start_from_passing_gate(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        self.assertIsNone(state.trace["failed_gate_id"])
+        self.assertFalse(any(gate["gate_id"] == 12 and gate["wound_linked"] for gate in state.gates))
+
+    def test_closure_status_consistent_between_status_strip_and_wound_panel(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        self.assertEqual(state.status_strip["closure_status"], state.wound_panel["closure_status"])
+        self.assertEqual(state.status_strip["closure_status"], "closed")
+
+    def test_closed_wound_trace_is_archived_not_active(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        self.assertEqual(state.trace["mode"], "archived")
+
+    def test_open_wound_trace_is_active(self):
+        summary = dict(SAMPLE_SUMMARY)
+        summary.pop("closure_record")
+        state = build_geometry_state(ROOT, summary)
+        self.assertEqual(state.status_strip["closure_status"], "not closed")
+        self.assertEqual(state.wound_panel["closure_status"], "not closed")
+        self.assertEqual(state.trace["mode"], "active")
+
+    def test_gate_22_25_labels_have_top_band_offsets(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        top_gates = [gate for gate in state.gates if gate["gate_id"] in {22, 23, 24, 25}]
+        self.assertTrue(all(gate["label_y"] < 75 for gate in top_gates))
+
+    def test_top_arc_labels_do_not_overlap_evidence_title(self):
+        state = build_geometry_state(ROOT, SAMPLE_SUMMARY)
+        top_gates = [gate for gate in state.gates if gate["gate_id"] in {22, 23, 24, 25}]
+        evidence_title_y = 210
+        self.assertTrue(all(gate["label_y"] < evidence_title_y - 80 for gate in top_gates))
 
     def test_geometry_events_are_read_only(self):
         events = geometry_events(ROOT)
